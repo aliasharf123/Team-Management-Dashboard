@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Real-Time Team Management Dashboard App is a powerful tool designed to streamline team collaboration, manage work tasks, and keep everyone on the same page. It leverages real-time technology through Redis and Socket.io to provide a dynamic and interactive platform for effective team management.
+The Real-Time Team Management Dashboard App is a powerful tool designed to streamline team collaboration, manage work tasks, and keep everyone on the same page. It leverages real-time technology through Redis and Socket.io to provide a dynamic and interactive platform for effective team management. **Document client & server in Readme file**
 
 ### Key Features
 
