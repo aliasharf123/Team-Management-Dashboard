@@ -15,9 +15,23 @@
         "stop": "docker-compose down"
     },
     "dependencies": {
+        "@nestjs/config": "^3.1.1",
+        "@nestjs/jwt": "^10.1.1",
+        "@nestjs/mongoose": "^10.0.1",
+        "@nestjs/passport": "^10.0.2",
+        "@nestjs/platform-express": "^10.2.7",
+        "argon2": "^0.31.1",
+        "class-transformer": "^0.5.1",
+        "class-validator": "^0.14.0",
         "concurrently": "^3.6.1",
         "i": "^0.3.7",
+        "mongoose": "^7.6.3",
         "npm": "^9.8.1",
+        "passport": "^0.6.0",
+        "passport-jwt": "^4.0.1",
         "wait-on": "^3.3.0"
+    },
+    "devDependencies": {
+        "@types/passport-jwt": "^3.0.11"
     }
 }
