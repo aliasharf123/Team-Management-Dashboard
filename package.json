@@ -10,8 +10,8 @@
     "scripts": {
         "docker:compose": "docker-compose up -d",
         "client:dev": "npm run dev --workspace=client",
-        "server:dev": "wait-on tcp:6379 && npm run start --workspaces=server",
-        "start": "concurrently 'npm docker:compose' 'npm:server:dev' 'npm:client:dev'",
+        "server:dev": "npm run start:dev --workspaces=server",
+        "start": "concurrently 'npm:server:dev' 'npm:client:dev'",
         "stop": "docker-compose down"
     },
     "dependencies": {
@@ -20,11 +20,15 @@
         "@nestjs/mongoose": "^10.0.1",
         "@nestjs/passport": "^10.0.2",
         "@nestjs/platform-express": "^10.2.7",
+        "@nestjs/platform-socket.io": "^10.2.8",
+        "@nestjs/websockets": "^10.2.8",
         "argon2": "^0.31.1",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.0",
         "concurrently": "^3.6.1",
+        "dotenv": "^16.3.1",
         "i": "^0.3.7",
+        "jose": "^5.0.1",
         "mongoose": "^7.6.3",
         "npm": "^9.8.1",
         "passport": "^0.6.0",

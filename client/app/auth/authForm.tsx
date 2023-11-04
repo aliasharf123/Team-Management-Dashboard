@@ -2,10 +2,12 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import google from "@/public/google.png";
+import { setCookies } from "@/lib/actions/AuthCookies";
 export default function Form() {
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  
   // sign in with google provider
   const signInWithGoogle = () => {};
 
@@ -82,6 +84,7 @@ export default function Form() {
       }
       // return a jwt access token
       const jwtToken = await res.json();
+      await setCookies(jwtToken.access_token);
       // remove error 
       setError('')
       // end loading

@@ -3,7 +3,7 @@ import Link from "next/link";
 import React from "react";
 import logo from "../../public/Screenshot_2023-10-25_102037-transformed.png";
 import teamImage from "../../public/TeamSignin.jpg";
-import Form from "./form";
+import AuthForm from "./authForm";
 export default function Page() {
   return (
     <div className="h-screen flex-col flex">
@@ -16,10 +16,10 @@ export default function Page() {
       </div>
       <div className="flex h-full   gap-14 lg:gap-24  px-4 md:px-8 justify-center">
         <div className="w-[38rem] max-md:hidden h-[28rem]  relative ">
-          <Image src={teamImage} className="flex-1 " alt="team image" fill />
+          <Image placeholder="blur" src={teamImage} className="flex-1 " alt="team image" fill />
         </div>
         {/* A client form component */}
-        <Form />
+        <AuthForm />
       </div>
     </div>
   );
