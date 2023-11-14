@@ -1,13 +1,11 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
+import { Project } from 'src/project/schemas/project.schema';
 
-export type CatDocument = HydratedDocument<User>;
+export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
-  @Prop()
-  id: string;
-
   @Prop()
   email: string;
 
@@ -16,5 +14,17 @@ export class User {
 
   @Prop({ required: false })
   imageUrl: string | undefined;
+
+  @Prop(
+    raw([
+      {
+        project: {
+          type: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' },
+        },
+        role: { type: String, enum: ['ADMAIN', 'FULL_ACCESS', 'READ_ONLY'] },
+      },
+    ]),
+  )
+  projects: Array<{ project: Project; role: string }>;
 }
 export const UserSchema = SchemaFactory.createForClass(User);

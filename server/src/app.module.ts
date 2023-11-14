@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { MongooseConfig } from './mongooseModule';
 import { ProjectModule } from './project/project.module';
 import { TaskModule } from './task/task.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -12,7 +13,9 @@ import { TaskModule } from './task/task.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
+    JwtModule.register({
+      global: true,
+    }),
     MongooseConfig,
     UserModule,
     ProjectModule,

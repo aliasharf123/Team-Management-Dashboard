@@ -1,11 +1,10 @@
 import {
   Injectable,
-  HttpException,
-  HttpStatus,
   ForbiddenException,
+  Logger,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
 import { AuthDto } from './dto/auth.dto';
 import * as argon from 'argon2';
@@ -31,14 +30,14 @@ export class AuthService {
       }
 
       // create a new user in database
-      const createUser = new this.userModel({
+      const createUser =( new this.userModel({
         email: authDto.email,
         password: hash,
-      });
+      }));
 
       // add a user to database
       createUser.save();
-      return this.signToken(createUser.id, createUser.email);
+      return this.signToken(createUser._id.toString(), createUser.email);
     } catch (e) {
       throw e;
     }
@@ -46,13 +45,13 @@ export class AuthService {
 
   async signIn(authDto: AuthDto) {
     try {
-      const user = await this.FindUser(authDto.email);
+      const user = (await this.FindUser(authDto.email)) as (User & {_id : ObjectId}) | undefined;
 
       if (!user) {
         throw new ForbiddenException('email not found');
       }
       if (await argon.verify(user.password, authDto.password)) {
-        return this.signToken(user.id, user.email);
+        return this.signToken(user._id.toString(), user.email);
       } else {
         throw new ForbiddenException('password not correct');
       }
