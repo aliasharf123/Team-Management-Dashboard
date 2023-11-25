@@ -15,6 +15,7 @@
         "stop": "docker-compose down"
     },
     "dependencies": {
+        "@mantine/ds": "^7.2.2",
         "@nestjs/config": "^3.1.1",
         "@nestjs/jwt": "^10.1.1",
         "@nestjs/mongoose": "^10.0.1",
@@ -22,6 +23,7 @@
         "@nestjs/platform-express": "^10.2.7",
         "@nestjs/platform-socket.io": "^10.2.8",
         "@nestjs/websockets": "^10.2.8",
+        "@tabler/icons-react": "^2.40.0",
         "argon2": "^0.31.1",
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.0",

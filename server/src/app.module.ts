@@ -6,6 +6,8 @@ import { MongooseConfig } from './mongooseModule';
 import { ProjectModule } from './project/project.module';
 import { TaskModule } from './task/task.module';
 import { JwtModule } from '@nestjs/jwt';
+import { CommentModule } from './comment/comment.module';
+import { NotifictionModule } from './notifiction/notifiction.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { JwtModule } from '@nestjs/jwt';
     UserModule,
     ProjectModule,
     TaskModule,
+    CommentModule,
+    NotifictionModule,
   ],
 })
 export class AppModule {}

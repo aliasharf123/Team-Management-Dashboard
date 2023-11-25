@@ -6,9 +6,10 @@ export async function setCookies(token: string) {
   cookies().set("access_token", token);
   redirect('/dashboard')
 }
-export async function deleteCookies(token: string) {
+export async function deleteCookies() {
   cookies().delete("access_token");
+  redirect('/')
 }
-export async function getCookies(token: string) {
-  return cookies().get("access_token");
+export async function getCookies() {
+  return cookies().get("access_token")?.value;
 }

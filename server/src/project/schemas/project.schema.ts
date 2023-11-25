@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { Document, HydratedDocument } from 'mongoose';
 import { User } from 'src/user/schemas/user.schema';
 
 export type ProjectDocument = HydratedDocument<Project>;
 
 @Schema()
-export class Project {
+export class Project extends Document{
   @Prop()
   title: string;
 
@@ -26,7 +26,10 @@ export class Project {
       },
     ]),
   )
-  Team: Array<{ user: User; role: string }>;
+  SharedWith: Array<{ user: User; role: string }>;
+    
+  @Prop()
+  isShared: boolean;
 
   @Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } })
   admin: User;

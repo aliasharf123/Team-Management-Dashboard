@@ -1,11 +1,11 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import mongoose, { Document, HydratedDocument } from 'mongoose';
 import { Project } from 'src/project/schemas/project.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema()
-export class User {
+export class User extends Document{
   @Prop()
   email: string;
 
@@ -13,7 +13,7 @@ export class User {
   password: string;
 
   @Prop({ required: false })
-  imageUrl: string | undefined;
+  imageUrl: string | undefined
 
   @Prop(
     raw([

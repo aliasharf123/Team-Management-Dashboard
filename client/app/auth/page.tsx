@@ -10,7 +10,7 @@ export default function Page() {
       {/* Header */}
       <div className="flex justify-center mb-14">
         <Link href={"/"} className="flex items-center">
-          <Image src={logo} className="w-20 h-20" width={80} height={80} alt="logo" />
+          <Image src={logo} className="h-20" width={80} height={80} alt="logo" />
           <h1 className="font-bold text-lg">Weka Team</h1>
         </Link>
       </div>
