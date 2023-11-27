@@ -1,26 +1,24 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import mongoose, { ClientSession, Model } from 'mongoose';
+import { ClientSession, Model } from 'mongoose';
 import { Role } from './types';
+import { Project } from 'src/project/schemas/project.schema';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async addProject(
-    addProjectId: string,
-    userID: string,
-    role: Role,
-    session: ClientSession,
-  ): Promise<mongoose.UpdateWriteOpResult> {
-    const userDoc = await this.userModel.updateOne(
-      { _id: userID },
-      { $push: { projects: { project: addProjectId, role: role } } },
-      { session: session },
-    );
+    project: Project, userID: string, session: ClientSession,
+  ): Promise<User> {
+    const user = await this.userModel.findById(userID);
 
-    return userDoc;
+    if(!user) throw new NotFoundException("user doesn't exist")
+
+    user.projects.push({project : project._id , role: Role.ADMIN.toString()})
+
+    return user.save({session: session});
   }
 
   async getInfo(userId: string) {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectService } from './project.service';
 import { GetUser } from 'src/auth/decorator/get-user-controller.decorator';

@@ -10,58 +10,55 @@ import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Project } from './schemas/project.schema';
 import { Connection, Model } from 'mongoose';
 import { UserService } from 'src/user/user.service';
-import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<Project>,
     private userService: UserService,
-    @InjectModel(User.name) private userModel: Model<User>,
-    @InjectConnection() private db: Connection,
+    @InjectConnection() private connection: Connection,
   ) {}
 
   async create(
     createProjectDto: CreateProjectDto,
-    admainId: string,
+    adminId: string,
   ): Promise<any> {
+    const session = await this.connection.startSession();
     const newProject = {
       ...createProjectDto,
-      admain: admainId,
       createdAt: new Date(),
       updateAt: new Date(),
     };
-    let createProject = null;
-    await this.db
-      .transaction(
-        async (session) => {
-          // create a new project
-          createProject = new this.projectModel(newProject, {
-            session: session,
-          });
-          Logger.log(`a created project id ${createProject._id.toString()}`);
-         
 
-          if (!createProject) throw new Error();
+    try {
+      session.startTransaction();
 
-          const createdProjectId = createProject._id.toString();
-          // Add project to admain user
-          const userDoc = await this.userService.addProject(
-            createdProjectId,
-            admainId,
-            'ADMAIN',
-            session,
-          );
+      // create a new project
+      const createProject = new this.projectModel(newProject);
+      await createProject.save({ session });
+      Logger.log(`a created project id ${createProject._id.toString()}`);
 
-          if (!userDoc) throw new Error();
-        },
-        { readPreference: 'primary' },
-      )
-      .catch((error) => {
-        Logger.error('Error creating project:', error);
-        throw new ForbiddenException(error.message || 'Error creating project');
-      });
-    return createProject;
+      if (!createProject) throw new Error();
+
+      // Add project to adminId user
+      const userDoc = await this.userService.addProject(
+        createProject,
+        adminId,
+        session,
+      );
+
+      if (!userDoc) throw new Error();
+
+      await session.commitTransaction();
+
+      return createProject;
+    } catch (err) {
+      await session.abortTransaction();
+      Logger.error('Error creating project:', err);
+      throw new ForbiddenException(err.message || 'Error creating project');
+    } finally {
+      await session.endSession();
+    }
   }
 
   update(id: number, updateProjectDto: UpdateProjectDto) {
@@ -75,7 +72,6 @@ export class ProjectService {
   async findOne(id: string) {
     try {
       const project = await this.projectModel.findById(id).exec();
-      console.log(project)
       if (!project) throw new NotFoundException('Project not found');
 
       return project;

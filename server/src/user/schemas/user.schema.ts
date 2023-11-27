@@ -1,4 +1,4 @@
-import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document, HydratedDocument } from 'mongoose';
 import { Project } from 'src/project/schemas/project.schema';
 
@@ -15,16 +15,13 @@ export class User extends Document{
   @Prop({ required: false })
   imageUrl: string | undefined
 
+  // @Prop({ type: [{ type: mongoose.Types.ObjectId, ref: 'ProjectUser' }] })
+  // projects: ProjectUser[];
+
   @Prop(
-    raw([
-      {
-        project: {
-          type: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' },
-        },
-        role: { type: String, enum: ['ADMAIN', 'FULL_ACCESS', 'READ_ONLY'] },
-      },
-    ]),
+    { type: [{ project: { type: mongoose.Types.ObjectId, ref: 'Project' }, role: String }] },
   )
   projects: Array<{ project: Project; role: string }>;
+
 }
 export const UserSchema = SchemaFactory.createForClass(User);
