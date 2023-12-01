@@ -17,6 +17,7 @@ export class ProjectRepository {
 
   async createProject(
     createProjectDto: CreateProjectDto,
+    adminId: string,
     session?: ClientSession
   ) {
     // add date to data

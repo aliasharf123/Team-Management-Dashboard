@@ -11,7 +11,7 @@ export class SessionService {
     try {
       session.startTransaction()
 
-      const value = cb(session)
+      const value = await cb(session)
 
       await session.commitTransaction()
 

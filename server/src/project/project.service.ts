@@ -29,6 +29,7 @@ export class ProjectService {
     return this.sessionService.startSession(async (session: ClientSession) => {
       const createProject = await this.projectRepository.createProject(
         createProjectDto,
+        adminId,
         session
       )
 
