@@ -29,27 +29,28 @@ export class ProjectService {
     return this.sessionService.startSession(async (session: ClientSession) => {
       const createProject = await this.projectRepository.createProject(
         createProjectDto,
-        adminId,
         session
       )
-
-      if (!createProject) throw new Error()
-
-      // Add project to adminId user
-      const userDoc = await this.userService.addProject(
+      const projectWithAdmin = this.projectRepository.addUserToProject(
+        adminId,
+        createProject._id,
+        Role.ADMIN,
+        session
+      )
+      await this.userService.addProject(
         createProject,
         Role.ADMIN.toString(),
         adminId,
         session
       )
-
-      if (!userDoc) throw new Error()
-
-      return createProject
+      return projectWithAdmin
     })
   }
 
   findOne(id: string) {
+    return this.projectRepository.getProjectById(id)
+  }
+  getProjectTeam(id: string) {
     return this.projectRepository.getProjectById(id)
   }
 }

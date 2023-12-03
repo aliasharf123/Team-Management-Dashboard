@@ -4,19 +4,31 @@ import {
   MessageBody,
   ConnectedSocket,
   WebSocketServer,
+  OnGatewayConnection,
+  OnGatewayInit,
 } from '@nestjs/websockets'
-import { Socket } from 'socket.io'
 import { ProjectService } from './project.service'
-import { UpdateProjectDto } from './dto/update-project.dto'
 import { JwtAuthGuard } from 'src/auth/guard/auth.guard'
-import { UseGuards } from '@nestjs/common'
+import { Logger, UseFilters, UseGuards } from '@nestjs/common'
 import { Namespace } from 'socket.io'
+import { WsCatchAllFilter } from 'src/expections/ws-catch-all-filters'
+import { SocketWithAuth } from 'src/auth/types'
+import { GatewayJwtGuard } from 'src/user/guard/gatway-admin.guard'
 
-@UseGuards(JwtAuthGuard)
+@UseFilters(new WsCatchAllFilter())
+@UseGuards(GatewayJwtGuard)
 @WebSocketGateway({ namespace: 'project' })
 export class ProjectGateway {
   @WebSocketServer()
   io: Namespace
 
   constructor(private readonly projectService: ProjectService) {}
+
+  @SubscribeMessage('share_with')
+  async shareWith(
+    @MessageBody('id') id: string,
+    @ConnectedSocket() client: SocketWithAuth
+  ) {
+    client.broadcast.emit('message', { id })
+  }
 }

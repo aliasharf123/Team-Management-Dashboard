@@ -1,83 +1,81 @@
-import {
-  Injectable,
-  ForbiddenException,
-  Logger,
-} from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
-import { User } from 'src/user/schemas/user.schema';
-import { AuthDto } from './dto/auth.dto';
-import * as argon from 'argon2';
-import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
+import { Injectable, ForbiddenException, Logger } from '@nestjs/common'
+import { InjectModel } from '@nestjs/mongoose'
+import { Model, ObjectId } from 'mongoose'
+import { User } from 'src/user/schemas/user.schema'
+import { AuthDto } from './dto/auth.dto'
+import * as argon from 'argon2'
+import { ConfigService } from '@nestjs/config'
+import { JwtService } from '@nestjs/jwt'
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     private jwt: JwtService,
-    private config: ConfigService,
+    private config: ConfigService
   ) {}
 
   async signUp(authDto: AuthDto) {
     try {
       // hash a password
-      const hash = await argon.hash(authDto.password);
+      const hash = await argon.hash(authDto.password)
       // detecte if email is used before
-      const userDetected = Boolean(await this.FindUser(authDto.email));
+      const userDetected = Boolean(await this.FindUser(authDto.email))
       if (userDetected) {
-        throw new ForbiddenException('Email is already taken');
+        throw new ForbiddenException('Email is already taken')
       }
 
       // create a new user in database
-      const createUser =( new this.userModel({
+      const createUser = new this.userModel({
         email: authDto.email,
         password: hash,
-      }));
+      })
 
       // add a user to database
-      createUser.save();
-      return this.signToken(createUser._id.toString(), createUser.email);
+      createUser.save()
+      return this.signToken(createUser._id.toString(), createUser.email)
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 
   async signIn(authDto: AuthDto) {
     try {
-      const user = (await this.FindUser(authDto.email)) as (User & {_id : ObjectId}) | undefined;
+      const user = (await this.FindUser(authDto.email)) as
+        | (User & { _id: ObjectId })
+        | undefined
 
       if (!user) {
-        throw new ForbiddenException('email not found');
+        throw new ForbiddenException('email not found')
       }
       if (await argon.verify(user.password, authDto.password)) {
-        return this.signToken(user._id.toString(), user.email);
+        return this.signToken(user._id.toString(), user.email)
       } else {
-        throw new ForbiddenException('password not correct');
+        throw new ForbiddenException('password not correct')
       }
     } catch (e) {
-      throw e;
+      throw e
     }
   }
 
   async FindUser(email: string): Promise<User> {
-    return this.userModel.findOne({ email: email });
+    return this.userModel.findOne({ email: email })
   }
 
   async signToken(
     userId: string,
-    email: string,
+    email: string
   ): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,
       email,
-    };
-    const secret = this.config.get('JWT_SECRET');
+    }
+    const secret = this.config.get('JWT_SECRET')
 
     const access_token = await this.jwt.signAsync(payload, {
       expiresIn: '16000m',
       secret: secret,
-    });
-    return { access_token };
+    })
+    return { access_token }
   }
 }
