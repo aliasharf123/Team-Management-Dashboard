@@ -1,16 +1,13 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common'
-import { InjectModel } from '@nestjs/mongoose'
+import { Injectable } from '@nestjs/common'
 import { User } from './schemas/user.schema'
-import { ClientSession, Model } from 'mongoose'
+import { ClientSession } from 'mongoose'
 import { Project } from 'src/project/schemas/project.schema'
+import { UserRepository } from './user.repository'
+import { Notification } from 'src/notification/schemas/notification.schema'
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(private userRepository: UserRepository) {}
 
   async addProject(
     project: Project,
@@ -18,31 +15,20 @@ export class UserService {
     userID: string,
     session?: ClientSession
   ): Promise<User> {
-    const user = await this.userModel.findById(userID)
-
-    if (!user) throw new NotFoundException("user doesn't exist")
-
-    user.projects.push({ project: project._id, role: role })
-
-    return user.save({ session: session })
+    return this.userRepository.addProject(project, role, userID, session)
   }
 
-  async getInfo(userId: string) {
-    try {
-      const user = await this.userModel
-        .findById(userId)
-        .select('-password')
-        .populate('projects')
-
-      if (!user) throw new NotFoundException('User not found')
-
-      user.projects = (await this.userModel.populate(user.projects, {
-        path: 'project',
-      })) as any
-
-      return user
-    } catch (error) {
-      throw new ForbiddenException(error)
-    }
+  async getUserById(userId: string) {
+    return this.userRepository.getUserById(userId)
+  }
+  async addNotification(
+    notification: Notification,
+    userId: string,
+    session?: ClientSession
+  ) {
+    return this.userRepository.addNotification(notification, userId, session)
+  }
+  async searchForUser(userEmail: string) {
+    return this.userRepository.searchForUser(userEmail)
   }
 }

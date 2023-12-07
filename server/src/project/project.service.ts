@@ -1,14 +1,6 @@
-import {
-  ForbiddenException,
-  Injectable,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { CreateProjectDto } from './dto/create-project.dto'
-import { UpdateProjectDto } from './dto/update-project.dto'
-import { InjectConnection, InjectModel } from '@nestjs/mongoose'
-import { Project } from './schemas/project.schema'
-import { ClientSession, Connection, Model } from 'mongoose'
+import { ClientSession } from 'mongoose'
 import { UserService } from 'src/user/user.service'
 import { Role } from 'src/user/types'
 import { ProjectRepository } from './project.repository'
@@ -29,12 +21,7 @@ export class ProjectService {
     return this.sessionService.startSession(async (session: ClientSession) => {
       const createProject = await this.projectRepository.createProject(
         createProjectDto,
-        session
-      )
-      const projectWithAdmin = this.projectRepository.addUserToProject(
         adminId,
-        createProject._id,
-        Role.ADMIN,
         session
       )
       await this.userService.addProject(
@@ -43,7 +30,7 @@ export class ProjectService {
         adminId,
         session
       )
-      return projectWithAdmin
+      return createProject
     })
   }
 
@@ -52,5 +39,8 @@ export class ProjectService {
   }
   getProjectTeam(id: string) {
     return this.projectRepository.getProjectById(id)
+  }
+  addUserToProject(userId: string, projectId: string, role: Role) {
+    return this.projectRepository.addUserToProject(userId, projectId, role)
   }
 }

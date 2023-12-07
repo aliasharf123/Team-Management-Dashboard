@@ -7,8 +7,8 @@ import { ProjectModule } from './project/project.module'
 import { TaskModule } from './task/task.module'
 import { JwtModule } from '@nestjs/jwt'
 import { CommentModule } from './comment/comment.module'
-import { NotifictionModule } from './notifiction/notifiction.module'
 import { SessionService } from './session.service'
+import { NotificationModule } from './notification/notification.module'
 
 @Global()
 @Module({
@@ -25,7 +25,8 @@ import { SessionService } from './session.service'
     ProjectModule,
     TaskModule,
     CommentModule,
-    NotifictionModule,
+    NotificationModule,
+    NotificationModule,
   ],
   providers: [SessionService],
   exports: [SessionService],

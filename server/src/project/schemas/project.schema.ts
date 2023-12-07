@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import mongoose, { Document, HydratedDocument } from 'mongoose'
+import mongoose, { Document, HydratedDocument, Types } from 'mongoose'
 import { User } from 'src/user/schemas/user.schema'
 
 export type ProjectDocument = HydratedDocument<Project>
@@ -19,17 +19,15 @@ export class Project extends Document {
   updateAt: Date
 
   @Prop({
-    type: [
-      { user: { type: mongoose.Types.ObjectId, ref: 'User' }, role: String },
-    ],
+    type: [{ user: { type: Types.ObjectId, ref: 'User' }, role: String }],
   })
   team: Array<{ user: User; role: string }>
 
   @Prop()
   isShared: boolean
 
-  @Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } })
-  admin: User
+  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  admin: Types.ObjectId
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project)
