@@ -43,8 +43,7 @@ export class NotificationGateway extends GatewayConnections {
 
       const sendToUser = await this.userService.searchForUser(sendToGmail)
 
-      const projectAdmin = project.admin
-      if (client.userId !== projectAdmin.toString()) {
+      if (client.userId !== project.admin._id.toString()) {
         throw new WsUnauthorizedException('need authorized to invite users')
       }
 

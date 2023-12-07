@@ -23,20 +23,13 @@ export class NotificationRepository {
       const notification = {
         title,
         content,
+        from: new Types.ObjectId(senderId),
         sendAt: new Date(),
       }
 
-      let createNotification = new this.notificationModel(notification)
+      const createNotification = new this.notificationModel(notification)
 
-      await createNotification.save({ session: session })
-
-      createNotification = await this.notificationModel.findOneAndUpdate(
-        { _id: createNotification._id },
-        { from: senderId },
-        { new: true, session: session }
-      )
-
-      return createNotification
+      return createNotification.save({ session: session })
     } catch (err) {
       throw new Error(err.message)
     }

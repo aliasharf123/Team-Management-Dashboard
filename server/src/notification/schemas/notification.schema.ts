@@ -9,8 +9,8 @@ export class Notification extends Document {
   @Prop()
   title: string
 
-  @Prop({ type: { type: Types.ObjectId, ref: 'User' } })
-  from: User
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  from: Types.ObjectId
 
   @Prop()
   content: string
