@@ -33,8 +33,8 @@ export class NotificationRepository {
       const createNotification = new this.notificationModel(notification)
 
       return createNotification.save({ session: session })
-    } catch (err) {
-      throw new Error(err.message)
+    } catch (error) {
+      throw new Error(error.message)
     }
   }
   async markAsRead(notificationId: string) {
