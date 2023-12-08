@@ -67,16 +67,15 @@ export class ProjectRepository {
   async addUserToProject(
     userId: string,
     projectId: string,
-    role: Role,
+    role: string,
     session?: ClientSession
-  ) {
+  ): Promise<Project> {
     try {
       const project = await this.projectModel.findOneAndUpdate(
         { _id: projectId, 'team.user': { $ne: userId } },
         { $push: { team: { user: userId, role } } },
         { new: true, session: session }
       )
-
       if (!project) {
         throw new NotFoundException(`Project with ID ${projectId} not found`)
       }

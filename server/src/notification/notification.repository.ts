@@ -7,6 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { Project } from 'src/project/schemas/project.schema'
+import { Role } from 'src/user/types'
 @Injectable()
 export class NotificationRepository {
   constructor(
@@ -19,16 +20,27 @@ export class NotificationRepository {
     title: string,
     content: string,
     projectInvitation?: Project,
+    role?: string,
     session?: ClientSession
   ) {
     try {
-      const notification = {
-        title,
-        content,
-        from: new Types.ObjectId(senderId),
-        projectInvitation: projectInvitation._id,
-        sendAt: new Date(),
-      }
+      const notification = projectInvitation
+        ? {
+            title,
+            content,
+            from: new Types.ObjectId(senderId),
+            projectInvitation: {
+              project: projectInvitation._id,
+              role: role,
+            },
+            sendAt: new Date(),
+          }
+        : {
+            title,
+            content,
+            from: new Types.ObjectId(senderId),
+            sendAt: new Date(),
+          }
 
       const createNotification = new this.notificationModel(notification)
 
@@ -48,6 +60,18 @@ export class NotificationRepository {
       return notification
     } catch (err) {
       throw new ForbiddenException(err.message)
+    }
+  }
+  async getById(id: string): Promise<Notification> {
+    try {
+      const notification = await this.notificationModel
+        .findById(new Types.ObjectId(id))
+        .exec()
+      if (!notification) throw new NotFoundException('notification not found')
+
+      return notification
+    } catch (error) {
+      throw new ForbiddenException(error)
     }
   }
 }

@@ -4,6 +4,7 @@ import {
   MessageBody,
   ConnectedSocket,
   WebSocketServer,
+  OnGatewayInit,
 } from '@nestjs/websockets'
 import { NotificationService } from './notification.service'
 import { SocketWithAuth } from 'src/auth/types'
@@ -18,10 +19,15 @@ import { ClientSession } from 'mongoose'
 import { UserService } from 'src/user/user.service'
 import { ProjectService } from 'src/project/project.service'
 import { SessionService } from 'src/session.service'
+import { CommunicationService } from './communication.server'
+import { Role } from 'src/user/types'
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({ namespace: 'notification' })
-export class NotificationGateway extends GatewayConnections {
+export class NotificationGateway
+  extends GatewayConnections
+  implements OnGatewayInit
+{
   @WebSocketServer()
   io: Namespace
 
@@ -29,9 +35,14 @@ export class NotificationGateway extends GatewayConnections {
     private readonly notificationService: NotificationService,
     private userService: UserService,
     private projectService: ProjectService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private communicationService: CommunicationService
   ) {
     super()
+  }
+  afterInit(server: any) {
+    this.communicationService.setNotificationNamespace(server)
+    this.communicationService.setUserIdMap(this.userIdToSocketIdMap)
   }
 
   @UseGuards(AdminUserGuard)
@@ -39,6 +50,7 @@ export class NotificationGateway extends GatewayConnections {
   async sendInvitation(
     @MessageBody('sendToGmail') sendToGmail: string,
     @MessageBody('projectId') projectId: string,
+    @MessageBody('role') role: string,
     @ConnectedSocket() client: SocketWithAuth
   ) {
     const results = await Promise.all([
@@ -56,6 +68,7 @@ export class NotificationGateway extends GatewayConnections {
             sendToUser,
             project,
             client,
+            role,
             session
           )
         await this.userService.addNotification(

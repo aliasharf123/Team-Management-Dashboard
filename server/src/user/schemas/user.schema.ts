@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose'
-import mongoose, { Document, HydratedDocument } from 'mongoose'
+import mongoose, { Document, HydratedDocument, Types } from 'mongoose'
 import { Project } from 'src/project/schemas/project.schema'
 
 export type UserDocument = HydratedDocument<User>
@@ -23,7 +23,7 @@ export class User extends Document {
       },
     ],
   })
-  projects: Array<{ project: Project; role: string }>
+  projects: Array<{ project: Types.ObjectId; role: string }>
 
   @Prop({ type: [{ type: mongoose.Types.ObjectId, ref: 'Notification' }] })
   notifications: Notification[]

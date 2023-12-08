@@ -26,7 +26,6 @@ import { NotificationModule } from './notification/notification.module'
     TaskModule,
     CommentModule,
     NotificationModule,
-    NotificationModule,
   ],
   providers: [SessionService],
   exports: [SessionService],

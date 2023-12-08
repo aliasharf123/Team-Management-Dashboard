@@ -1,7 +1,6 @@
 import { ForbiddenException } from '@nestjs/common'
 import { InjectConnection } from '@nestjs/mongoose'
 import { ClientSession, Connection } from 'mongoose'
-
 export class SessionService {
   constructor(@InjectConnection() private connection: Connection) {}
 

@@ -26,7 +26,7 @@ export class ProjectService {
         session
       )
       await this.userService.addProject(
-        createProject,
+        createProject._id.toString(),
         Role.ADMIN.toString(),
         adminId,
         session
@@ -38,8 +38,18 @@ export class ProjectService {
   findOne(id: string) {
     return this.projectRepository.getProjectById(id)
   }
-  addUserToProject(userId: string, projectId: string, role: Role) {
-    return this.projectRepository.addUserToProject(userId, projectId, role)
+  addUserToProject(
+    userId: string,
+    projectId: string,
+    role: string,
+    session?: ClientSession
+  ) {
+    return this.projectRepository.addUserToProject(
+      userId,
+      projectId,
+      role,
+      session
+    )
   }
   update(projectId: string, updateProjectDto: UpdateProjectDto) {
     return this.projectRepository.update(projectId, updateProjectDto)

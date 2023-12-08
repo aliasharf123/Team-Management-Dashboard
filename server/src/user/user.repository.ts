@@ -3,7 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { ClientSession, Model } from 'mongoose'
+import { ClientSession, Model, Types } from 'mongoose'
 import { User } from './schemas/user.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import { Notification } from 'src/notification/schemas/notification.schema'
@@ -32,7 +32,7 @@ export class UserRepository {
     }
   }
   async addProject(
-    project: Project,
+    projectId: string,
     role: string,
     userID: string,
     session?: ClientSession
@@ -41,7 +41,7 @@ export class UserRepository {
 
     if (!user) throw new NotFoundException("user doesn't exist")
 
-    user.projects.push({ project: project._id, role: role })
+    user.projects.push({ project: new Types.ObjectId(projectId), role: role })
 
     return user.save({ session: session })
   }

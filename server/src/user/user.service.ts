@@ -10,12 +10,12 @@ export class UserService {
   constructor(private userRepository: UserRepository) {}
 
   async addProject(
-    project: Project,
+    projectId: string,
     role: string,
     userID: string,
     session?: ClientSession
   ): Promise<User> {
-    return this.userRepository.addProject(project, role, userID, session)
+    return this.userRepository.addProject(projectId, role, userID, session)
   }
 
   async getUserById(userId: string) {
