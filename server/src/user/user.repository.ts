@@ -66,4 +66,18 @@ export class UserRepository {
 
     return user
   }
+  async getNotifications(userId: string) {
+    try {
+      const user = await this.userModel
+        .findById(userId)
+        .select('notifications')
+        .populate('notifications')
+
+      if (!user) throw new NotFoundException("user doesn't exist")
+
+      return user
+    } catch (error) {
+      throw new ForbiddenException(error.message)
+    }
+  }
 }

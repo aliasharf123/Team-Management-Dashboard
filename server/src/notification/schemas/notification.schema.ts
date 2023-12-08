@@ -18,6 +18,9 @@ export class Notification extends Document {
   @Prop({ type: Boolean, default: false })
   isRead: boolean
 
+  @Prop({ type: Types.ObjectId, required: false })
+  projectInvitation: Types.ObjectId
+
   @Prop()
   sendAt: Date
 }

@@ -31,4 +31,7 @@ export class UserService {
   async searchForUser(userEmail: string) {
     return this.userRepository.searchForUser(userEmail)
   }
+  getNotifications(userId: string) {
+    return this.userRepository.getNotifications(userId)
+  }
 }

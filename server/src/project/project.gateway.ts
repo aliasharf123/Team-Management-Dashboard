@@ -6,11 +6,14 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets'
 import { ProjectService } from './project.service'
-import { UseFilters } from '@nestjs/common'
+import { UseFilters, UseGuards, ValidationPipe } from '@nestjs/common'
 import { Namespace } from 'socket.io'
 import { WsCatchAllFilter } from 'src/expections/ws-catch-all-filters'
 import { SocketWithAuth } from 'src/auth/types'
 import { GatewayConnections } from 'src/gatewayConnections.gateway'
+import { UpdateProjectDto } from './dto/update-project.dto'
+import { AdminUserGuard } from 'src/auth/guard/admin-user.guard'
+import { AcceptInvitationDto } from './dto/accept-projectInvitation.dto'
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({ namespace: 'project' })
@@ -21,12 +24,19 @@ export class ProjectGateway extends GatewayConnections {
   constructor(private readonly projectService: ProjectService) {
     super()
   }
-
-  @SubscribeMessage('share_with')
-  async shareWith(
-    @MessageBody('id') id: string,
-    @ConnectedSocket() client: SocketWithAuth
+  // @UseGuards(AdminUserGuard)
+  // @SubscribeMessage('updateProject')
+  // async update(
+  //   @ConnectedSocket() client: SocketWithAuth,
+  //   @MessageBody() updateProjectDto: UpdateProjectDto
+  // ) {
+  //   const
+  // }
+  @SubscribeMessage('acceptInvitation')
+  async acceptInvitation(
+    @ConnectedSocket() client: SocketWithAuth,
+    @MessageBody(new ValidationPipe()) acceptInvitationDto: AcceptInvitationDto
   ) {
-    client.broadcast.emit('message', { id })
+    return
   }
 }

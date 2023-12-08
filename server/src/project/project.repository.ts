@@ -9,6 +9,7 @@ import { Project } from './schemas/project.schema'
 import { ClientSession, Model, Types } from 'mongoose'
 import { CreateProjectDto } from './dto/create-project.dto'
 import { Role } from 'src/user/types'
+import { UpdateProjectDto } from './dto/update-project.dto'
 
 @Injectable()
 export class ProjectRepository {
@@ -42,7 +43,7 @@ export class ProjectRepository {
   async getProjectById(id: string) {
     try {
       const project = await this.projectModel
-        .findById(id)
+        .findById(new Types.ObjectId(id))
         .populate('admin')
         .exec()
       if (!project) throw new NotFoundException('Project not found')
@@ -70,22 +71,28 @@ export class ProjectRepository {
     session?: ClientSession
   ) {
     try {
-      // determine which is role of user
-      // to make it admin or added to team
-      let project = null
-      if (role === Role.ADMIN) {
-        project = await this.projectModel.findOneAndUpdate(
-          { _id: projectId, 'team.user': { $ne: userId } },
-          { admin: new Types.ObjectId(userId) },
-          { new: true, session: session }
-        )
-      } else {
-        project = await this.projectModel.findOneAndUpdate(
-          { _id: projectId, 'team.user': { $ne: userId } },
-          { $push: { team: { user: userId, role } } },
-          { new: true, session: session }
-        )
+      const project = await this.projectModel.findOneAndUpdate(
+        { _id: projectId, 'team.user': { $ne: userId } },
+        { $push: { team: { user: userId, role } } },
+        { new: true, session: session }
+      )
+
+      if (!project) {
+        throw new NotFoundException(`Project with ID ${projectId} not found`)
       }
+
+      return project
+    } catch (error) {
+      throw new ForbiddenException(error)
+    }
+  }
+  async update(projectId: string, updateProjectDto: UpdateProjectDto) {
+    try {
+      const project = await this.projectModel.findOneAndUpdate(
+        { _id: projectId },
+        { $set: updateProjectDto },
+        { new: true }
+      )
 
       if (!project) {
         throw new NotFoundException(`Project with ID ${projectId} not found`)

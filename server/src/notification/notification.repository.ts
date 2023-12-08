@@ -1,11 +1,12 @@
-import mongoose, { ClientSession, Model, Types } from 'mongoose'
+import { ClientSession, Model, Types } from 'mongoose'
 import { Notification } from './schemas/notification.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import {
-  ForbiddenException,
   Injectable,
+  ForbiddenException,
   NotFoundException,
 } from '@nestjs/common'
+import { Project } from 'src/project/schemas/project.schema'
 @Injectable()
 export class NotificationRepository {
   constructor(
@@ -17,6 +18,7 @@ export class NotificationRepository {
     senderId: string,
     title: string,
     content: string,
+    projectInvitation?: Project,
     session?: ClientSession
   ) {
     try {
@@ -24,6 +26,7 @@ export class NotificationRepository {
         title,
         content,
         from: new Types.ObjectId(senderId),
+        projectInvitation: projectInvitation._id,
         sendAt: new Date(),
       }
 
@@ -32,6 +35,19 @@ export class NotificationRepository {
       return createNotification.save({ session: session })
     } catch (err) {
       throw new Error(err.message)
+    }
+  }
+  async markAsRead(notificationId: string) {
+    try {
+      const notification = await this.notificationModel.findOneAndUpdate(
+        { _id: notificationId },
+        { $set: { isRead: true } },
+        { new: true }
+      )
+      if (!notification) throw new NotFoundException('notification not found')
+      return notification
+    } catch (err) {
+      throw new ForbiddenException(err.message)
     }
   }
 }

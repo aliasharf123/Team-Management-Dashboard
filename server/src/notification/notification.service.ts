@@ -4,6 +4,10 @@ import { Project } from 'src/project/schemas/project.schema'
 import { NotificationRepository } from './notification.repository'
 import { User } from 'src/user/schemas/user.schema'
 import { SocketWithAuth } from 'src/auth/types'
+import { UserService } from 'src/user/user.service'
+import { ProjectService } from 'src/project/project.service'
+import { SessionService } from 'src/session.service'
+import { Notification } from './schemas/notification.schema'
 
 @Injectable()
 export class NotificationService {
@@ -22,9 +26,13 @@ export class NotificationService {
         clientSocket.userId,
         title(project.title),
         content(project, clientSocket.username, invitedUser.email),
+        project,
         session
       )
     return CreateInvitation
+  }
+  markIsRead(id: string) {
+    return this.notificationRepository.markAsRead(id)
   }
 
   createContent(type: 'Invitation' | 'mention') {

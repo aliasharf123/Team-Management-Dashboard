@@ -5,6 +5,7 @@ import { UserService } from 'src/user/user.service'
 import { Role } from 'src/user/types'
 import { ProjectRepository } from './project.repository'
 import { SessionService } from 'src/session.service'
+import { UpdateProjectDto } from './dto/update-project.dto'
 
 @Injectable()
 export class ProjectService {
@@ -37,10 +38,10 @@ export class ProjectService {
   findOne(id: string) {
     return this.projectRepository.getProjectById(id)
   }
-  getProjectTeam(id: string) {
-    return this.projectRepository.getProjectById(id)
-  }
   addUserToProject(userId: string, projectId: string, role: Role) {
     return this.projectRepository.addUserToProject(userId, projectId, role)
+  }
+  update(projectId: string, updateProjectDto: UpdateProjectDto) {
+    return this.projectRepository.update(projectId, updateProjectDto)
   }
 }

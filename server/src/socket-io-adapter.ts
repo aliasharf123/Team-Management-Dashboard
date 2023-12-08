@@ -3,9 +3,7 @@ import { JwtService } from '@nestjs/jwt'
 import { IoAdapter } from '@nestjs/platform-socket.io'
 import { Server, ServerOptions } from 'socket.io'
 import { SocketWithAuth } from './auth/types'
-import { WsUnauthorizedException } from './expections/ws-filters'
 import { ConfigService } from '@nestjs/config'
-import { error } from 'console'
 
 export class SocketIoAdapter extends IoAdapter {
   constructor(private app: INestApplicationContext) {
