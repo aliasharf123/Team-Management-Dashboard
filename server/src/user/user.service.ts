@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { User } from './schemas/user.schema'
 import { ClientSession } from 'mongoose'
-import { Project } from 'src/project/schemas/project.schema'
 import { UserRepository } from './user.repository'
 import { Notification } from 'src/notification/schemas/notification.schema'
+import { SocketWithAuth } from 'src/auth/types'
 
 @Injectable()
 export class UserService {

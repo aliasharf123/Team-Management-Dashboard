@@ -7,7 +7,6 @@ import { ClientSession, Model, Types } from 'mongoose'
 import { User } from './schemas/user.schema'
 import { InjectModel } from '@nestjs/mongoose'
 import { Notification } from 'src/notification/schemas/notification.schema'
-import { Project } from 'src/project/schemas/project.schema'
 
 @Injectable()
 export class UserRepository {
@@ -15,16 +14,9 @@ export class UserRepository {
 
   async getUserById(id: string) {
     try {
-      const user = await this.userModel
-        .findById(id)
-        .select('-password')
-        .populate('projects')
+      const user = await this.userModel.findById(id).select('-password')
 
       if (!user) throw new NotFoundException('User not found')
-
-      user.projects = (await this.userModel.populate(user.projects, {
-        path: 'project',
-      })) as any
 
       return user
     } catch (error) {
@@ -75,6 +67,19 @@ export class UserRepository {
 
       if (!user) throw new NotFoundException("user doesn't exist")
 
+      return user
+    } catch (error) {
+      throw new ForbiddenException(error.message)
+    }
+  }
+  async getProjects(userId: string) {
+    try {
+      const user = await this.userModel.findById(userId).select('projects')
+      if (!user) throw new NotFoundException("user doesn't exist")
+
+      user.projects = (await this.userModel.populate(user.projects, {
+        path: 'project',
+      })) as any
       return user
     } catch (error) {
       throw new ForbiddenException(error.message)

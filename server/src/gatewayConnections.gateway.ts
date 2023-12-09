@@ -14,11 +14,16 @@ export class GatewayConnections
       description: 'client ' + client.id + 'disconnected',
     })
   }
-  handleConnection(client: SocketWithAuth, ...args: any[]) {
+  async handleConnection(client: SocketWithAuth, ...args: any[]) {
     this.userIdToSocketIdMap[client.userId] = client.id.toString()
 
     client.broadcast.emit('user_added', {
       description: 'new client, welcome ' + client.id,
     })
+    await this.joinUsersToRooms(client)
+  }
+  // hook method
+  async joinUsersToRooms(client: SocketWithAuth) {
+    return
   }
 }

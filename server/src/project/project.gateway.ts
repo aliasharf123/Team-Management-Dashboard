@@ -57,18 +57,18 @@ export class ProjectGateway extends GatewayConnections {
     if (!invitation.projectInvitation) {
       throw new WsBadRequestException('it is notification is not invitation')
     }
-    const projectId = invitation.projectInvitation.project
+    const projectId = invitation.projectInvitation.project.toString()
     const [updatedProject, acceptInvitation] =
       await this.sessionService.startSession(async (session) => {
         const results = await Promise.all([
           this.projectService.addUserToProject(
             client.userId,
-            projectId as any,
+            projectId,
             invitation.projectInvitation.role,
             session
           ),
           this.userService.addProject(
-            projectId as any,
+            projectId,
             invitation.projectInvitation.role,
             client.userId,
             session
@@ -92,7 +92,17 @@ export class ProjectGateway extends GatewayConnections {
       invitation.from as any,
       acceptInvitation
     )
+    this.io.to(projectId).emit('projectUpdated', updatedProject)
+    this.io.in(client.id).socketsJoin(projectId)
+
     console.log(new Date().getTime() - startTime)
-    return updatedProject
+  }
+  async joinUsersToRooms(client: SocketWithAuth): Promise<void> {
+    const project = (await this.userService.getUserById(client.userId)).projects
+    if (project) {
+      project.forEach((value) => {
+        this.io.in(client.id).socketsJoin(value.project.toString())
+      })
+    }
   }
 }
