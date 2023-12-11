@@ -6,33 +6,17 @@ import { Role } from 'src/user/types'
 import { ProjectRepository } from './project.repository'
 import { SessionService } from 'src/session.service'
 import { UpdateProjectDto } from './dto/update-project.dto'
+import { Project } from './schemas/project.schema'
 
 @Injectable()
 export class ProjectService {
-  constructor(
-    private projectRepository: ProjectRepository,
-    private userService: UserService,
-    private sessionService: SessionService
-  ) {}
+  constructor(private projectRepository: ProjectRepository) {}
 
   async create(
     createProjectDto: CreateProjectDto,
     adminId: string
   ): Promise<any> {
-    return this.sessionService.startSession(async (session: ClientSession) => {
-      const createProject = await this.projectRepository.createProject(
-        createProjectDto,
-        adminId,
-        session
-      )
-      await this.userService.addProject(
-        createProject._id.toString(),
-        Role.ADMIN.toString(),
-        adminId,
-        session
-      )
-      return createProject
-    })
+    return this.projectRepository.createProject(createProjectDto, adminId)
   }
 
   findOne(id: string) {
@@ -53,5 +37,11 @@ export class ProjectService {
   }
   update(projectId: string, updateProjectDto: UpdateProjectDto) {
     return this.projectRepository.update(projectId, updateProjectDto)
+  }
+  removeUser(userId: string, projectId: string): Promise<Project> {
+    return this.projectRepository.removeUser(userId, projectId)
+  }
+  deleteProject(projectId: string) {
+    return this.projectRepository.deleteProject(projectId)
   }
 }

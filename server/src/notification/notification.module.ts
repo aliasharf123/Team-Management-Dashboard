@@ -7,6 +7,7 @@ import { NotificationRepository } from './notification.repository'
 import { NotificationController } from './notification.controller'
 import { CommunicationService } from './communication.server'
 
+@Global()
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -19,7 +20,7 @@ import { CommunicationService } from './communication.server'
     NotificationService,
     NotificationRepository,
   ],
-  exports: [NotificationService, CommunicationService],
+  exports: [NotificationService, CommunicationService, NotificationRepository],
   controllers: [NotificationController],
 })
 export class NotificationModule {}

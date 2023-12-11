@@ -1,4 +1,4 @@
-import { Controller, Put, Param, UseGuards } from '@nestjs/common'
+import { Controller, Put, Param, UseGuards, Delete } from '@nestjs/common'
 import { NotificationService } from './notification.service'
 import { JwtAuthGuard } from 'src/auth/guard/auth.guard'
 
@@ -10,5 +10,9 @@ export class NotificationController {
   @Put('/markIsRead/:id')
   markIsRead(@Param('id') id: string) {
     return this.notificationService.markIsRead(id)
+  }
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.notificationService.delete(id)
   }
 }

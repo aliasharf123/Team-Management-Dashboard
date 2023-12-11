@@ -26,8 +26,8 @@ export class Project extends Document {
   @Prop()
   isShared: boolean
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
-  admin: Types.ObjectId
+  // @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  // admin: Types.ObjectId
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project)

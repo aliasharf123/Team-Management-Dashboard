@@ -37,71 +37,88 @@ export class ProjectGateway extends GatewayConnections {
   ) {
     super()
   }
-  // @UseGuards(AdminUserGuard)
-  // @SubscribeMessage('updateProject')
-  // async update(
-  //   @ConnectedSocket() client: SocketWithAuth,
-  //   @MessageBody() updateProjectDto: UpdateProjectDto
-  // ) {
-  //   const
-  // }
+  @UseGuards(AdminUserGuard)
+  @SubscribeMessage('updateProject')
+  async update(
+    @ConnectedSocket() client: SocketWithAuth,
+    @MessageBody(new ValidationPipe()) updateProjectDto: UpdateProjectDto
+  ) {
+    const startTime = new Date().getTime()
+
+    const updatedProject = await this.projectService.update(
+      updateProjectDto.id,
+      updateProjectDto
+    )
+
+    this.io
+      .to(updateProjectDto.id)
+      .emit('projectUpdated', { updatedProject, updatedBy: client.userId })
+
+    console.log(new Date().getTime() - startTime)
+  }
   @SubscribeMessage('acceptInvitation')
   async acceptInvitation(
     @ConnectedSocket() client: SocketWithAuth,
     @MessageBody(new ValidationPipe()) acceptInvitationDto: AcceptInvitationDto
   ) {
     const startTime = new Date().getTime()
+
     const invitation = await this.notificationService.getNotificationById(
       acceptInvitationDto.invitationId
     )
+    console.log(new Date().getTime() - startTime, 'getNotificationById')
     if (!invitation.projectInvitation) {
-      throw new WsBadRequestException('it is notification is not invitation')
+      throw new WsBadRequestException('It is notification is not invitation')
+    }
+    if (invitation.to.toString() !== client.userId) {
+      throw new WsBadRequestException("you aren't the one this invitation to")
     }
     const projectId = invitation.projectInvitation.project.toString()
     const [updatedProject, acceptInvitation] =
       await this.sessionService.startSession(async (session) => {
-        const results = await Promise.all([
-          this.projectService.addUserToProject(
-            client.userId,
-            projectId,
-            invitation.projectInvitation.role,
-            session
-          ),
-          this.userService.addProject(
-            projectId,
-            invitation.projectInvitation.role,
-            client.userId,
-            session
-          ),
-        ])
+        const startTime = new Date().getTime()
+
+        const updatedProject = await this.projectService.addUserToProject(
+          client.userId,
+          projectId,
+          invitation.projectInvitation.role,
+          session
+        )
+        console.log(new Date().getTime() - startTime, 'updatedProject')
+
+        const startTime1 = new Date().getTime()
+
         const acceptInvitation =
           await this.notificationService.createAcceptNotification(
             invitation.from as any,
-            results[0],
+            client.userId,
+            updatedProject,
             session
           )
-        await this.userService.addNotification(
-          acceptInvitation,
-          invitation.from as any,
-          session
+        console.log(
+          new Date().getTime() - startTime1,
+          'createAcceptNotification'
         )
 
-        return [results[0], acceptInvitation]
+        return [updatedProject, acceptInvitation]
       })
     this.communicationService.sendEventToNotificationNamespace(
       invitation.from as any,
       acceptInvitation
     )
-    this.io.to(projectId).emit('projectUpdated', updatedProject)
+    this.io
+      .to(projectId)
+      .emit('projectUpdated', { updatedProject, updatedBy: client.userId })
     this.io.in(client.id).socketsJoin(projectId)
 
-    console.log(new Date().getTime() - startTime)
+    console.log(new Date().getTime() - startTime, 'total')
   }
+  // overwrite the hook method
   async joinUsersToRooms(client: SocketWithAuth): Promise<void> {
-    const project = (await this.userService.getUserById(client.userId)).projects
-    if (project) {
-      project.forEach((value) => {
-        this.io.in(client.id).socketsJoin(value.project.toString())
+    const projects = await this.userService.getProjects(client.userId)
+    if (projects) {
+      projects.forEach((project) => {
+        this.io.in(client.id).socketsJoin(project._id.toString())
       })
     }
   }

@@ -16,6 +16,6 @@ import { NotificationModule } from 'src/notification/notification.module'
   ],
   providers: [ProjectGateway, ProjectService, ProjectRepository],
   controllers: [ProjectController],
-  exports: [ProjectService],
+  exports: [ProjectService, ProjectRepository],
 })
 export class ProjectModule {}

@@ -25,6 +25,7 @@ export class NotificationService {
 
     return this.notificationRepository.createNotification(
       clientSocket.userId,
+      invitedUser._id,
       title(project.title),
       content(project, clientSocket.username, invitedUser.email),
       project,
@@ -34,12 +35,14 @@ export class NotificationService {
   }
   async createAcceptNotification(
     senderId: string,
+    invitedUserId: string,
     project: Project,
     session?: ClientSession
   ) {
     const { title, content } = this.createContent('acceptInvitation')
     return this.notificationRepository.createNotification(
       senderId,
+      invitedUserId,
       title(project),
       content(project),
       undefined,
@@ -86,5 +89,8 @@ export class NotificationService {
   }
   getNotificationById(id: string) {
     return this.notificationRepository.getById(id)
+  }
+  delete(id: string): Promise<Notification> {
+    return this.notificationRepository.delete(id)
   }
 }

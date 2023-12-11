@@ -13,6 +13,9 @@ export class Notification extends Document {
   @Prop({ type: Types.ObjectId, ref: 'User' })
   from: Types.ObjectId
 
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  to: Types.ObjectId
+
   @Prop()
   content: string
 

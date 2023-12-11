@@ -29,7 +29,7 @@ export class ProjectRepository {
         overView: createProjectDto.overView,
         createdAt: new Date(),
         updateAt: new Date(),
-        admin: new Types.ObjectId(adminId),
+        team: { user: adminId, role: Role.ADMIN },
       }
       const createProject = new this.projectModel(projectWithDate)
       Logger.log(`a created project id ${createProject._id.toString()}`)
@@ -44,13 +44,12 @@ export class ProjectRepository {
     try {
       const project = await this.projectModel
         .findById(new Types.ObjectId(id))
-        .populate('admin')
         .exec()
       if (!project) throw new NotFoundException('Project not found')
 
       return project
     } catch (error) {
-      throw new ForbiddenException(error)
+      throw new ForbiddenException(error.message)
     }
   }
   async getProjectTeam(id: string) {
@@ -60,7 +59,7 @@ export class ProjectRepository {
 
       return project
     } catch (error) {
-      throw new ForbiddenException(error)
+      throw new ForbiddenException(error.message)
     }
   }
 
@@ -82,7 +81,7 @@ export class ProjectRepository {
 
       return project
     } catch (error) {
-      throw new ForbiddenException(error)
+      throw new ForbiddenException(error.message)
     }
   }
   async update(projectId: string, updateProjectDto: UpdateProjectDto) {
@@ -99,7 +98,45 @@ export class ProjectRepository {
 
       return project
     } catch (error) {
-      throw new ForbiddenException(error)
+      throw new ForbiddenException(error.message)
+    }
+  }
+  async removeUser(userId: string, projectId: string) {
+    try {
+      const project = await this.projectModel.findByIdAndUpdate(
+        projectId,
+        { $pull: { team: { user: userId } } },
+        { new: true }
+      )
+
+      if (!project) {
+        throw new NotFoundException(`Project with ID ${projectId} not found`)
+      }
+
+      return project
+    } catch (error) {
+      throw new ForbiddenException(error.message)
+    }
+  }
+  async deleteProject(projectId: string): Promise<Project> {
+    const deletedProject = await this.projectModel.findByIdAndDelete(projectId)
+
+    if (!deletedProject) {
+      throw new NotFoundException('Project not found')
+    }
+    return deletedProject
+  }
+  async getUserProjects(userId: string) {
+    try {
+      const projects = await this.projectModel.find({ 'team.user': userId })
+
+      if (!projects) {
+        throw new NotFoundException('user not found')
+      }
+
+      return projects
+    } catch (error) {
+      throw new ForbiddenException(error.message)
     }
   }
 }

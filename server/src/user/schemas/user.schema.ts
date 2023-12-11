@@ -14,18 +14,5 @@ export class User extends Document {
 
   @Prop({ required: false })
   imageUrl: string | undefined
-
-  @Prop({
-    type: [
-      {
-        project: { type: mongoose.Types.ObjectId, ref: 'Project' },
-        role: String,
-      },
-    ],
-  })
-  projects: Array<{ project: Types.ObjectId; role: string }>
-
-  @Prop({ type: [{ type: mongoose.Types.ObjectId, ref: 'Notification' }] })
-  notifications: Notification[]
 }
 export const UserSchema = SchemaFactory.createForClass(User)

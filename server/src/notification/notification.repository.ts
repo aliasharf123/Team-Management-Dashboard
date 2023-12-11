@@ -17,6 +17,7 @@ export class NotificationRepository {
 
   async createNotification(
     senderId: string,
+    invitedUser: string,
     title: string,
     content: string,
     projectInvitation?: Project,
@@ -29,6 +30,7 @@ export class NotificationRepository {
             title,
             content,
             from: new Types.ObjectId(senderId),
+            to: new Types.ObjectId(invitedUser),
             projectInvitation: {
               project: projectInvitation._id,
               role: role,
@@ -39,6 +41,7 @@ export class NotificationRepository {
             title,
             content,
             from: new Types.ObjectId(senderId),
+            to: new Types.ObjectId(invitedUser),
             sendAt: new Date(),
           }
 
@@ -72,6 +75,31 @@ export class NotificationRepository {
       return notification
     } catch (error) {
       throw new ForbiddenException(error)
+    }
+  }
+  async delete(id: string): Promise<Notification> {
+    const deletedNotification = await this.notificationModel.findByIdAndDelete(
+      id
+    )
+
+    if (!deletedNotification) {
+      throw new NotFoundException('notification not found')
+    }
+    return deletedNotification
+  }
+  async getUserNotification(userId: string) {
+    try {
+      const notifications = await this.notificationModel.find({
+        to: new Types.ObjectId(userId),
+      })
+
+      if (!notifications) {
+        throw new NotFoundException('user not found')
+      }
+
+      return notifications
+    } catch (error) {
+      throw new ForbiddenException(error.message)
     }
   }
 }

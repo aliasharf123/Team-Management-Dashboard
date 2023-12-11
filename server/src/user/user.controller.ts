@@ -16,4 +16,8 @@ export class UserController {
   getNotification(@GetUser('userId') userId: string) {
     return this.userService.getNotifications(userId)
   }
+  @Get('project')
+  getProjects(@GetUser('userId') userId: string) {
+    return this.userService.getProjects(userId)
+  }
 }
