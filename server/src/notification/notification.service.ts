@@ -3,12 +3,8 @@ import { ClientSession } from 'mongoose'
 import { Project } from 'src/project/schemas/project.schema'
 import { NotificationRepository } from './notification.repository'
 import { User } from 'src/user/schemas/user.schema'
-import { SocketWithAuth } from 'src/auth/types'
-import { UserService } from 'src/user/user.service'
-import { ProjectService } from 'src/project/project.service'
-import { SessionService } from 'src/session.service'
+import { AdminSocket, SocketWithAuth } from 'src/auth/types'
 import { Notification } from './schemas/notification.schema'
-import { Role } from 'src/user/types'
 
 @Injectable()
 export class NotificationService {
@@ -33,6 +29,24 @@ export class NotificationService {
       session
     )
   }
+  async createRemoveUserNotification(
+    invitedUserId: string,
+    project: Project,
+    clientSocket: SocketWithAuth,
+    session?: ClientSession
+  ) {
+    const { title, content } = this.createContent('removeUser')
+
+    return this.notificationRepository.createNotification(
+      clientSocket.userId,
+      invitedUserId,
+      title(project, clientSocket),
+      content(project),
+      undefined,
+      undefined,
+      session
+    )
+  }
   async createAcceptNotification(
     senderId: string,
     invitedUserId: string,
@@ -54,7 +68,7 @@ export class NotificationService {
     return this.notificationRepository.markAsRead(id)
   }
 
-  createContent(type: 'Invitation' | 'acceptInvitation') {
+  createContent(type: 'Invitation' | 'acceptInvitation' | 'removeUser') {
     let content: any
     let title: any
 
@@ -62,8 +76,7 @@ export class NotificationService {
       title = (projectName: string) =>
         `🚀 Your VIP Invite to ${projectName} ! 🎉`
 
-      content = (project: Project, adminName: string, userName: string) => `
-      Hi ${userName},
+      content = (project: Project, adminName: string) => `
   
       You've been invited to join the ${project.title} project! 🚀
       
@@ -83,6 +96,18 @@ export class NotificationService {
     
         #ProjectSuccess 🚀
       `
+    } else if (type == 'removeUser') {
+      title = (project: Project, client: AdminSocket) =>
+        `⚠️ ${client.username} Removed You from ${project.title} Project`
+      content = (project: Project) => `
+  
+      you have been kicked from ${project.title}
+
+      Regards,
+      Project Notification
+  
+      #ProjectUpdate ⚠️
+    `
     }
 
     return { title, content }

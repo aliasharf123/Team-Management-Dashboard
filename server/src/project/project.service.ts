@@ -38,8 +38,12 @@ export class ProjectService {
   update(projectId: string, updateProjectDto: UpdateProjectDto) {
     return this.projectRepository.update(projectId, updateProjectDto)
   }
-  removeUser(userId: string, projectId: string): Promise<Project> {
-    return this.projectRepository.removeUser(userId, projectId)
+  removeUser(
+    userId: string,
+    projectId: string,
+    session?: ClientSession
+  ): Promise<Project> {
+    return this.projectRepository.removeUser(userId, projectId, session)
   }
   deleteProject(projectId: string) {
     return this.projectRepository.deleteProject(projectId)

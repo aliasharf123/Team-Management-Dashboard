@@ -6,10 +6,15 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets'
 import { ProjectService } from './project.service'
-import { UseFilters, UseGuards, ValidationPipe } from '@nestjs/common'
+import {
+  NotFoundException,
+  UseFilters,
+  UseGuards,
+  ValidationPipe,
+} from '@nestjs/common'
 import { Server } from 'socket.io'
 import { WsCatchAllFilter } from 'src/expections/ws-catch-all-filters'
-import { SocketWithAuth } from 'src/auth/types'
+import { AdminSocket, SocketWithAuth } from 'src/auth/types'
 import { GatewayConnections } from 'src/gatewayConnections.gateway'
 import { UpdateProjectDto } from './dto/update-project.dto'
 import { AdminUserGuard } from 'src/auth/guard/admin-user.guard'
@@ -18,9 +23,9 @@ import { CommunicationService } from 'src/notification/communication.server'
 import { NotificationService } from 'src/notification/notification.service'
 import { WsBadRequestException } from 'src/expections/ws-filters'
 import { SessionService } from 'src/session.service'
-import { Project } from './schemas/project.schema'
-import { User } from 'src/user/schemas/user.schema'
 import { UserService } from 'src/user/user.service'
+import { RemoveUserDto } from './dto/remove-user.dto'
+import { DeleteProjectDto } from './dto/delete-project.dto'
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway({ namespace: 'project' })
@@ -116,10 +121,85 @@ export class ProjectGateway extends GatewayConnections {
   // overwrite the hook method
   async joinUsersToRooms(client: SocketWithAuth): Promise<void> {
     const projects = await this.userService.getProjects(client.userId)
+    client.joinedProjects = projects
     if (projects) {
       projects.forEach((project) => {
         this.io.in(client.id).socketsJoin(project._id.toString())
       })
     }
+  }
+  @UseGuards(AdminUserGuard)
+  @SubscribeMessage('removeUser')
+  async removeUser(
+    @ConnectedSocket() client: AdminSocket,
+    @MessageBody(new ValidationPipe()) removeUserDto: RemoveUserDto
+  ) {
+    const projectId = client.project._id.toString()
+
+    const userRole = client.project.team.find(
+      (value) => value.user.toString() == removeUserDto.userId
+    )
+    if (!userRole) {
+      throw new NotFoundException('user not found in project')
+    }
+    const startTime = new Date().getTime()
+    const [updatedProject, notification] =
+      await this.sessionService.startSession(async (session) => {
+        const startTime = new Date().getTime()
+        const updatedProject = await this.projectService.removeUser(
+          removeUserDto.userId,
+          projectId,
+          session
+        )
+        console.log(new Date().getTime() - startTime, 'removeUser')
+        const startTime1 = new Date().getTime()
+
+        const notification =
+          await this.notificationService.createRemoveUserNotification(
+            removeUserDto.userId,
+            client.project,
+            client as any,
+            session
+          )
+        console.log(
+          new Date().getTime() - startTime1,
+          'createRemoveUserNotification'
+        )
+
+        return [updatedProject, notification]
+      })
+    this.communicationService.sendEventToNotificationNamespace(
+      removeUserDto.userId,
+      notification
+    )
+    const startTime12 = new Date().getTime()
+    this.io
+      .to(projectId)
+      .emit('projectUpdated', { updatedProject, updatedBy: client.userId })
+
+    this.io
+      .in(this.userIdToSocketIdMap[removeUserDto.userId])
+      .socketsLeave(projectId)
+    console.log(new Date().getTime() - startTime12)
+
+    console.log(new Date().getTime() - startTime, 'full')
+  }
+
+  @UseGuards(AdminUserGuard)
+  @SubscribeMessage('deleteProject')
+  async deleteProject(
+    @ConnectedSocket() client: AdminSocket,
+    @MessageBody(new ValidationPipe()) deleteProjectDto: DeleteProjectDto
+  ) {
+    const startTime = new Date().getTime()
+    await this.projectService.deleteProject(deleteProjectDto.id)
+
+    this.io
+      .to(deleteProjectDto.id)
+      .emit('projectDeleted', {
+        deletedProject: client.project,
+        deletedBy: client.userId,
+      })
+    console.log(new Date().getTime() - startTime, 'full')
   }
 }

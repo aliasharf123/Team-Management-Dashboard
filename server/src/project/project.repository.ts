@@ -101,12 +101,12 @@ export class ProjectRepository {
       throw new ForbiddenException(error.message)
     }
   }
-  async removeUser(userId: string, projectId: string) {
+  async removeUser(userId: string, projectId: string, session?: ClientSession) {
     try {
-      const project = await this.projectModel.findByIdAndUpdate(
-        projectId,
+      const project = await this.projectModel.findOneAndUpdate(
+        { _id: projectId },
         { $pull: { team: { user: userId } } },
-        { new: true }
+        { new: true, session: session }
       )
 
       if (!project) {
@@ -118,10 +118,10 @@ export class ProjectRepository {
       throw new ForbiddenException(error.message)
     }
   }
-  async deleteProject(projectId: string): Promise<Project> {
-    const deletedProject = await this.projectModel.findByIdAndDelete(projectId)
+  async deleteProject(projectId: string) {
+    const deletedProject = await this.projectModel.deleteOne({ _id: projectId })
 
-    if (!deletedProject) {
+    if (deletedProject.deletedCount == 0) {
       throw new NotFoundException('Project not found')
     }
     return deletedProject
