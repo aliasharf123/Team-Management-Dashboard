@@ -86,6 +86,7 @@ export class ProjectRepository {
   }
   async update(projectId: string, updateProjectDto: UpdateProjectDto) {
     try {
+      updateProjectDto['updateAt'] = new Date()
       const project = await this.projectModel.findOneAndUpdate(
         { _id: projectId },
         { $set: updateProjectDto },
