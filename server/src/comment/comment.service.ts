@@ -1,26 +1,29 @@
-import { Injectable } from '@nestjs/common';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import { Injectable } from '@nestjs/common'
+import { CreateCommentDto } from './dto/create-comment.dto'
+import { UpdateCommentDto } from './dto/update-comment.dto'
+import { CommentRepository } from './comment.repository'
+import { Comment } from './schemas/comment.schema'
 
 @Injectable()
 export class CommentService {
-  create(createCommentDto: CreateCommentDto) {
-    return 'This action adds a new comment';
-  }
+  constructor(private commentRepository: CommentRepository) {}
 
-  findAll() {
-    return `This action returns all comment`;
+  create(createCommentDto: CreateCommentDto): Promise<Comment> {
+    return this.commentRepository.create(createCommentDto)
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
+  getById(id: string): Promise<Comment> {
+    return this.commentRepository.getById(id)
   }
-
-  update(id: number, updateCommentDto: UpdateCommentDto) {
-    return `This action updates a #${id} comment`;
+  delete(id: string) {
+    return this.commentRepository.delete(id)
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} comment`;
+  update(updateCommentDto: UpdateCommentDto) {
+    return this.commentRepository.update(updateCommentDto)
+  }
+  getTaskComment(taskId: string): Promise<Comment[]> {
+    return this.commentRepository.getTaskComment(taskId)
+  }
+  getCommentReplies(commentId: string): Promise<Comment[]> {
+    return this.commentRepository.getCommentReplies(commentId)
   }
 }

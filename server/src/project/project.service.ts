@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { CreateProjectDto } from './dto/create-project.dto'
 import { ClientSession } from 'mongoose'
-import { UserService } from 'src/user/user.service'
-import { Role } from 'src/user/types'
 import { ProjectRepository } from './project.repository'
-import { SessionService } from 'src/session.service'
 import { UpdateProjectDto } from './dto/update-project.dto'
 import { Project } from './schemas/project.schema'
 

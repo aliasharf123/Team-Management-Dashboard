@@ -1,26 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
+import { Injectable } from '@nestjs/common'
+import { CreateTaskDto } from './dto/create-task.dto'
+import { UpdateTaskDto } from './dto/update-task.dto'
+import { TaskRepository } from './task.repository'
+import { Task } from './schemas/task.schema'
+import { ClientSession } from 'mongoose'
 
 @Injectable()
 export class TaskService {
-  create(createTaskDto: CreateTaskDto) {
-    return 'This action adds a new task';
+  constructor(private taskRepository: TaskRepository) {}
+  create(createTaskDto: CreateTaskDto): Promise<any> {
+    return this.taskRepository.create(createTaskDto)
   }
-
-  findAll() {
-    return `This action returns all task`;
+  getById(id: string) {
+    return this.taskRepository.getById(id)
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} task`;
+  delete(id: string) {
+    return this.taskRepository.delete(id)
   }
-
-  update(id: number, updateTaskDto: UpdateTaskDto) {
-    return `This action updates a #${id} task`;
+  update(updateTaskDto: UpdateTaskDto) {
+    return this.taskRepository.update(updateTaskDto)
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} task`;
+  assignUserTo(id: string, userId: string): Promise<Task> {
+    return this.taskRepository.assignUserTo(id, userId)
+  }
+  removeUser(
+    userId: string,
+    taskId: string,
+    session?: ClientSession
+  ): Promise<Task> {
+    return this.taskRepository.removeUser(userId, taskId, session)
+  }
+  async addTag(taskId: string, createTagDto: CreateTaskDto): Promise<Task> {
+    return this.taskRepository.addTag(taskId, createTagDto)
+  }
+  async removeTag(tagId: string, taskId: string): Promise<Task> {
+    return this.taskRepository.removeTag(taskId, taskId)
   }
 }
