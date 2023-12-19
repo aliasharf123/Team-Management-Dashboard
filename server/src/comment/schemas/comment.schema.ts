@@ -13,7 +13,7 @@ export class Comment extends Document {
   @Prop({ type: { type: Types.ObjectId, ref: 'User' } })
   commentBy: Types.ObjectId
 
-  @Prop({ type: { type: Types.ObjectId, ref: 'Comment' }, required: false })
+  @Prop({ type: { type: Types.ObjectId, ref: 'Comment' } })
   reply: Comment[]
 
   @Prop()

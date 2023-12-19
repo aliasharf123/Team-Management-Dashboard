@@ -22,9 +22,7 @@ export class SocketIoAdapter extends IoAdapter {
     const jwtService = this.app.get(JwtService)
     const server: Server = super.createIOServer(port, optionsWithCORS)
     const secret = this.app.get(ConfigService).get('JWT_SECRET')
-    server.of('project').use(createTokenMiddleware(jwtService, secret))
-    server.of('notification').use(createTokenMiddleware(jwtService, secret))
-
+    server.use(createTokenMiddleware(jwtService, secret))
     return server
   }
 }

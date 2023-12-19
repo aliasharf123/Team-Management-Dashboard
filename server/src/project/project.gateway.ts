@@ -4,6 +4,7 @@ import {
   MessageBody,
   ConnectedSocket,
   WebSocketServer,
+  OnGatewayInit,
 } from '@nestjs/websockets'
 import { ProjectService } from './project.service'
 import {
@@ -19,28 +20,35 @@ import { GatewayConnections } from 'src/gatewayConnections.gateway'
 import { UpdateProjectDto } from './dto/update-project.dto'
 import { AdminUserGuard } from 'src/auth/guard/admin-user.guard'
 import { AcceptInvitationDto } from './dto/accept-projectInvitation.dto'
-import { CommunicationService } from 'src/notification/communication.server'
 import { NotificationService } from 'src/notification/notification.service'
 import { WsBadRequestException } from 'src/expections/ws-filters'
 import { SessionService } from 'src/session.service'
 import { UserService } from 'src/user/user.service'
 import { RemoveUserDto } from './dto/remove-user.dto'
 import { DeleteProjectDto } from './dto/delete-project.dto'
+import { ProjectCommunication } from './project.communication'
 
 @UseFilters(new WsCatchAllFilter())
-@WebSocketGateway({ namespace: 'project' })
-export class ProjectGateway extends GatewayConnections {
+@WebSocketGateway()
+export class ProjectGateway
+  extends GatewayConnections
+  implements OnGatewayInit
+{
   @WebSocketServer()
   io: Server
 
   constructor(
     private readonly projectService: ProjectService,
-    private communicationService: CommunicationService,
     private notificationService: NotificationService,
     private sessionService: SessionService,
-    private userService: UserService
+    private userService: UserService,
+    private projectCommunication: ProjectCommunication
   ) {
     super()
+  }
+  afterInit(server: any) {
+    this.projectCommunication.setProjectNamespace(server)
+    this.projectCommunication.setUserIdMap(this.userIdToSocketIdMap)
   }
   @UseGuards(AdminUserGuard)
   @SubscribeMessage('updateProject')
@@ -107,10 +115,11 @@ export class ProjectGateway extends GatewayConnections {
 
         return [updatedProject, acceptInvitation]
       })
-    this.communicationService.sendEventToNotificationNamespace(
-      invitation.from as any,
-      acceptInvitation
-    )
+
+    this.io
+      .to(this.userIdToSocketIdMap[invitation.from.toString()])
+      .emit('receiveNotification', acceptInvitation)
+
     this.io
       .to(projectId)
       .emit('projectUpdated', { updatedProject, updatedBy: client.userId })
@@ -118,6 +127,7 @@ export class ProjectGateway extends GatewayConnections {
 
     console.log(new Date().getTime() - startTime, 'total')
   }
+
   // overwrite the hook method
   async joinUsersToRooms(client: SocketWithAuth): Promise<void> {
     const projects = await this.userService.getProjects(client.userId)
@@ -168,11 +178,11 @@ export class ProjectGateway extends GatewayConnections {
 
         return [updatedProject, notification]
       })
-    this.communicationService.sendEventToNotificationNamespace(
-      removeUserDto.userId,
-      notification
-    )
-    const startTime12 = new Date().getTime()
+
+    this.io
+      .to(this.userIdToSocketIdMap[removeUserDto.userId])
+      .emit('receiveNotification', notification)
+
     this.io
       .to(projectId)
       .emit('projectUpdated', { updatedProject, updatedBy: client.userId })
@@ -180,7 +190,6 @@ export class ProjectGateway extends GatewayConnections {
     this.io
       .in(this.userIdToSocketIdMap[removeUserDto.userId])
       .socketsLeave(projectId)
-    console.log(new Date().getTime() - startTime12)
 
     console.log(new Date().getTime() - startTime, 'full')
   }
@@ -194,12 +203,10 @@ export class ProjectGateway extends GatewayConnections {
     const startTime = new Date().getTime()
     await this.projectService.deleteProject(deleteProjectDto.id)
 
-    this.io
-      .to(deleteProjectDto.id)
-      .emit('projectDeleted', {
-        deletedProject: client.project,
-        deletedBy: client.userId,
-      })
+    this.io.to(deleteProjectDto.id).emit('projectDeleted', {
+      deletedProject: client.project,
+      deletedBy: client.userId,
+    })
     console.log(new Date().getTime() - startTime, 'full')
   }
 }

@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory, raw } from '@nestjs/mongoose'
-import mongoose, { Document, HydratedDocument, ObjectId } from 'mongoose'
+import mongoose, { Document, HydratedDocument, ObjectId, Types } from 'mongoose'
 import { User } from 'src/user/schemas/user.schema'
-import { StatusEnum } from '../types'
+import { StatusEnum, Tag } from '../types'
 import { Project } from 'src/project/schemas/project.schema'
 
 export type TaskDocument = HydratedDocument<Task>
@@ -21,10 +21,10 @@ export class Task extends Document {
   status: StatusEnum
 
   @Prop(raw([{ name: String, color: String }]))
-  tags: Record<'name' | 'color', string>
+  tags: Tag[]
 
-  @Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'Project' } })
-  project: ObjectId
+  @Prop({ type: Types.ObjectId, ref: 'Project' })
+  project: Project
 
   @Prop()
   createdAt: Date
@@ -34,9 +34,6 @@ export class Task extends Document {
 
   @Prop({ required: false })
   content: string
-
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] })
-  comments: Comment[]
 }
 
 export const TaskSchema = SchemaFactory.createForClass(Task)

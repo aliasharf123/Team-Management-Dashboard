@@ -13,17 +13,18 @@ export class AdminUserGuard implements CanActivate {
   constructor(private projectService: ProjectService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const client: SocketWithAuth = context.switchToWs().getClient()
+
     const messageBody: UpdateProjectDto = context.switchToWs().getData()
-    const projectId = messageBody['id'] ?? messageBody['projectId']
+    const projectId =
+      messageBody['id'] && messageBody['projectId']
+        ? messageBody['projectId']
+        : messageBody['id'] ?? messageBody['projectId']
 
     if (!projectId) {
       throw new WsBadRequestException('project id must provided')
     }
     const project = await this.projectService.findOne(projectId)
 
-    if (!project) {
-      throw new WsBadRequestException("Project doesn't found")
-    }
     const userInTeam = project.team.find(
       (value) => value.user.toString() == client.userId
     )

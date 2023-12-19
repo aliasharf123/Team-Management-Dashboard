@@ -7,6 +7,7 @@ import { ProjectController } from './project.controller'
 import { ProjectRepository } from './project.repository'
 import { NotificationService } from 'src/notification/notification.service'
 import { NotificationModule } from 'src/notification/notification.module'
+import { ProjectCommunication } from './project.communication'
 
 @Global()
 @Module({
@@ -14,8 +15,13 @@ import { NotificationModule } from 'src/notification/notification.module'
     MongooseModule.forFeature([{ name: Project.name, schema: ProjectSchema }]),
     NotificationModule,
   ],
-  providers: [ProjectGateway, ProjectService, ProjectRepository],
+  providers: [
+    ProjectGateway,
+    ProjectService,
+    ProjectRepository,
+    ProjectCommunication,
+  ],
   controllers: [ProjectController],
-  exports: [ProjectService, ProjectRepository],
+  exports: [ProjectService, ProjectRepository, ProjectCommunication],
 })
 export class ProjectModule {}

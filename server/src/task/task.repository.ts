@@ -8,6 +8,9 @@ import { Task } from './schemas/task.schema'
 import { ClientSession, Model, Types } from 'mongoose'
 import { CreateTaskDto } from './dto/create-task.dto'
 import { UpdateTaskDto } from './dto/update-task.dto'
+import { CreateTagDto } from './dto/create-tag.dto'
+import { RemoveTagDto } from './dto/remove-tag.dto'
+import { AssignUserDto } from './dto/assign-user.dto'
 
 @Injectable()
 export class TaskRepository {
@@ -16,8 +19,11 @@ export class TaskRepository {
   create(createTaskDto: CreateTaskDto): Promise<any> {
     try {
       createTaskDto['createdAt'] = new Date()
-
-      const createdTask = new this.taskModel(createTaskDto)
+      const createTaskObject = {
+        ...createTaskDto,
+        project: new Types.ObjectId(createTaskDto.projectId),
+      }
+      const createdTask = new this.taskModel(createTaskObject)
 
       return createdTask.save()
     } catch (err) {
@@ -66,15 +72,16 @@ export class TaskRepository {
       throw new ForbiddenException(error.message)
     }
   }
-  async assignUserTo(id: string, userId: string): Promise<Task> {
+  async assignUserTo(assignUserDto: AssignUserDto): Promise<Task> {
     try {
+      const { taskId, userId } = assignUserDto
       const task = await this.taskModel.findOneAndUpdate(
-        { _id: id, assignTo: { $ne: userId } },
+        { _id: taskId, assignTo: { $ne: userId } },
         { $push: { assignTo: userId } },
         { new: true }
       )
       if (!task) {
-        throw new NotFoundException(`Task with ID ${id} not found`)
+        throw new NotFoundException(`Task with ID ${taskId} not found`)
       }
 
       return task
@@ -103,11 +110,11 @@ export class TaskRepository {
       throw new ForbiddenException(error.message)
     }
   }
-  async addTag(taskId: string, createTagDto: CreateTaskDto): Promise<Task> {
+  async addTag(createTagDto: CreateTagDto): Promise<Task> {
     try {
       const task = await this.taskModel.findOneAndUpdate(
-        { _id: taskId },
-        { $push: { tags: createTagDto } },
+        { _id: createTagDto.taskId },
+        { $push: { tags: createTagDto.tag } },
         { new: true }
       )
 
@@ -120,11 +127,11 @@ export class TaskRepository {
       throw new ForbiddenException(error.message)
     }
   }
-  async removeTag(tagId: string, taskId: string): Promise<Task> {
+  async removeTag(removeTagDto: RemoveTagDto): Promise<Task> {
     try {
       const task = await this.taskModel.findOneAndUpdate(
-        { _id: taskId },
-        { $pull: { tags: { _id: tagId } } },
+        { _id: removeTagDto.taskId },
+        { $pull: { tags: { _id: removeTagDto.tagId } } },
         { new: true }
       )
 

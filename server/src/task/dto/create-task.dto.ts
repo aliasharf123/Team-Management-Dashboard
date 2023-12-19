@@ -6,14 +6,11 @@ export class CreateTaskDto {
   @IsString()
   title: string
 
-  @IsDate()
-  dueDate: Date
-
   @IsNotEmpty()
   @IsEnum(StatusEnum)
   status: StatusEnum
 
   @IsNotEmpty()
   @IsString()
-  project: string
+  projectId: string
 }

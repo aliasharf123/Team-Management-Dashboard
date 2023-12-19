@@ -16,35 +16,25 @@ import { WsCatchAllFilter } from 'src/expections/ws-catch-all-filters'
 import { User } from 'src/user/schemas/user.schema'
 import { Project } from 'src/project/schemas/project.schema'
 import { UserService } from 'src/user/user.service'
-import { CommunicationService } from './communication.server'
 import { InvitationDto } from './dto/invitation.dto'
 
 @UseFilters(new WsCatchAllFilter())
-@WebSocketGateway({ namespace: 'notification' })
-export class NotificationGateway
-  extends GatewayConnections
-  implements OnGatewayInit
-{
+@WebSocketGateway()
+export class NotificationGateway extends GatewayConnections {
   @WebSocketServer()
   io: Namespace
 
   constructor(
     private readonly notificationService: NotificationService,
-    private userService: UserService,
-    private communicationService: CommunicationService
+    private userService: UserService
   ) {
     super()
-  }
-  afterInit(server: any) {
-    this.communicationService.setNotificationNamespace(server)
-    this.communicationService.setUserIdMap(this.userIdToSocketIdMap)
   }
 
   @UseGuards(AdminUserGuard)
   @SubscribeMessage('sendInvitation')
   async sendInvitation(
     @MessageBody(new ValidationPipe()) invitationDto: InvitationDto,
-
     @ConnectedSocket() client: AdminSocket
   ) {
     const { sendToGmail, role } = invitationDto

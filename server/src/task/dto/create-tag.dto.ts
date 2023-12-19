@@ -1,11 +1,32 @@
-import { IsNotEmpty, IsRgbColor, IsString } from 'class-validator'
+import {
+  IsHexColor,
+  IsNotEmpty,
+  IsString,
+  ValidateNested,
+} from 'class-validator'
+import { Tag } from '../types'
+import { Type } from 'class-transformer'
 
 export class CreateTagDto {
   @IsNotEmpty()
   @IsString()
+  taskId: string
+
+  @IsNotEmpty()
+  @IsString()
+  projectId: string
+
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => TagDto)
+  tag: Tag
+}
+export class TagDto {
+  @IsNotEmpty()
+  @IsString()
   name: string
 
-  @IsRgbColor()
+  @IsHexColor()
   @IsNotEmpty()
   color: string
 }
