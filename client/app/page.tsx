@@ -33,7 +33,7 @@ export default function Home() {
             recusandae, nemo facilis quos explicabo dicta similique nihil,
             voluptas nostrum. Tempora, illum!
           </p>
-          <Link href={"/auth"} className="ButtonBlack paddingStyle">
+          <Link href={"/auth/signup"} className="ButtonBlack paddingStyle">
             Sign up free -{">"}
           </Link>
         </div>

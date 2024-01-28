@@ -3,47 +3,47 @@ import Image from "next/image";
 import React, { useState } from "react";
 import google from "@/public/google.png";
 import { setCookies } from "@/lib/actions/AuthCookies";
-export default function Form() {
-  const [isSignIn, setIsSignIn] = useState<boolean>(true);
+import Link from "next/link";
+export default function Form({ isSignIn }: { isSignIn?: boolean }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
   // sign in with google provider
   const signInWithGoogle = () => {};
 
-  // function validatePassword(password: string): boolean {
-  //   if (
-  //     !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*()_+!]).{8,}$/.test(
-  //       password
-  //     )
-  //   ) {
-  //     const invalidRules: string[] = [];
-  //     if (password.length < 8) {
-  //       invalidRules.push("Password should be at least 8 characters long.");
-  //     }
-  //     if (!/[a-z]/.test(password)) {
-  //       invalidRules.push(
-  //         "Password should contain at least one lowercase letter."
-  //       );
-  //     }
-  //     if (!/[A-Z]/.test(password)) {
-  //       invalidRules.push(
-  //         "Password should contain at least one uppercase letter."
-  //       );
-  //     }
-  //     if (!/\d/.test(password)) {
-  //       invalidRules.push("Password should contain at least one digit.");
-  //     }
-  //     if (!/[@#$%^&*()_+!]/.test(password)) {
-  //       invalidRules.push(
-  //         "Password should contain at least one special character (e.g., @#$%^&*()_+!)."
-  //       );
-  //     }
-  //     setError(`Password is not valid. ${invalidRules.join(" ")}`);
-  //     return false;
-  //   }
-  //   return true;
-  // }
+  function validatePassword(password: string): boolean {
+    if (
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*()_+!]).{8,}$/.test(
+        password
+      )
+    ) {
+      const invalidRules: string[] = [];
+      if (password.length < 8) {
+        invalidRules.push("Password should be at least 8 characters long.");
+      }
+      if (!/[a-z]/.test(password)) {
+        invalidRules.push(
+          "Password should contain at least one lowercase letter."
+        );
+      }
+      if (!/[A-Z]/.test(password)) {
+        invalidRules.push(
+          "Password should contain at least one uppercase letter."
+        );
+      }
+      if (!/\d/.test(password)) {
+        invalidRules.push("Password should contain at least one digit.");
+      }
+      if (!/[@#$%^&*()_+!]/.test(password)) {
+        invalidRules.push(
+          "Password should contain at least one special character (e.g., @#$%^&*()_+!)."
+        );
+      }
+      setError(`Password is not valid. ${invalidRules.join(" ")}`);
+      return false;
+    }
+    return true;
+  }
 
   // sign in with email and password
   const signInWithPassWord = async (event: any) => {
@@ -55,10 +55,10 @@ export default function Form() {
     ) as any;
 
     if (formData.email && formData.password) {
-      // // vaildate a password
-      // if (!validatePassword(formData.password)) {
-      //   return;
-      // }
+      // vaildate a password
+      if (!validatePassword(formData.password)) {
+        return;
+      }
 
       // start loading
       setIsLoading(true);
@@ -94,17 +94,17 @@ export default function Form() {
     }
   };
   return (
-    <div className="flex flex-col gap-7 w-[25rem] ">
+    <div className="flex flex-col gap-7 md:w-[25rem]  w-screen max-md:px-5">
       {/* title and navigate to another auth method */}
-      <div className="font-semibold w-full flex justify-between">
+      <div className="font-semibold w-full flex items-center justify-between">
         <h1 className="text-3xl">{isSignIn ? "Sign In" : "Sign up"}</h1>
-        <button
-          onClick={() => setIsSignIn(!isSignIn)}
+        <Link
+          href={`/auth/${isSignIn ? "signup" : "login"}`}
           className="text-blue-600 "
         >
           <span className="text-Secondary-text-silver">or </span>
-          {isSignIn ? "create an account " : "aleardy have account"}
-        </button>
+          {isSignIn ? "create an account " : "already have account"}
+        </Link>
       </div>
       {/* sign in with google section */}
       <div className=" flex flex-col gap-3 ">
@@ -117,8 +117,8 @@ export default function Form() {
         </button>
       </div>
       {/* Break */}
-      <div className="text-Secondary-text-silver text-center">
-        <span>or</span>
+      <div id="or" className="text-Secondary-text-silver  text-center">
+        or
       </div>
       {/* Form with email and password */}
       <form onSubmit={signInWithPassWord} className="flex flex-col gap-4">
@@ -134,7 +134,7 @@ export default function Form() {
           className="inputAuth"
           placeholder="Password"
         />
-        {/* error meesage */}
+        {/* error message */}
         {Boolean(error) && (
           <h1 className="text-red-600 font-semibold">{error}</h1>
         )}

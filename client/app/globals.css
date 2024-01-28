@@ -24,3 +24,29 @@
     @apply rounded-[10px] px-[14px] pt-[12px] pb-[10px];
   }
 }
+#or {
+  position: relative;
+  height: 50px;
+
+  line-height: 50px;
+  text-align: center;
+}
+
+#or::before,
+#or::after {
+  position: absolute;
+  width: 45%;
+  height: 1px;
+  top: 24px;
+  background-color: #aaa;
+
+  content: "";
+}
+
+#or::before {
+  left: 0;
+}
+
+#or::after {
+  right: 0;
+}

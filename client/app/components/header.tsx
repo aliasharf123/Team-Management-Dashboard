@@ -35,12 +35,12 @@ export default function Header() {
         </div>
         <div className="flex gap-1 items-center">
           <Link
-            href={"/"}
+            href={"/auth/login"}
             className="paddingStyle duration-300  hover:bg-[rgba(0,0,0,0.07)]"
           >
             Log in
           </Link>
-          <Link href={"/auth"} className="ButtonBlack paddingStyle">
+          <Link href={"/auth/signup"} className="ButtonBlack paddingStyle">
             Sign up free -{">"}
           </Link>
           <SideBar />
