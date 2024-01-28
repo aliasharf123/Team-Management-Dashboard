@@ -10,18 +10,20 @@ export class SocketIoAdapter extends IoAdapter {
     super(app)
   }
   createIOServer(port: number, options?: ServerOptions) {
+    const jwtService = this.app.get(JwtService)
     const cors = {
-      origin: ['*'],
+      origin: [
+        `http://localhost:3000`,
+        new RegExp(`/^http:\/\/192\.168\.1\.([1-9]|[1-9]\d):3000$/`),
+      ],
     }
-
     const optionsWithCORS: ServerOptions = {
       ...options,
       cors,
     }
-
-    const jwtService = this.app.get(JwtService)
     const server: Server = super.createIOServer(port, optionsWithCORS)
     const secret = this.app.get(ConfigService).get('JWT_SECRET')
+    console.log(server)
     server.use(createTokenMiddleware(jwtService, secret))
     return server
   }

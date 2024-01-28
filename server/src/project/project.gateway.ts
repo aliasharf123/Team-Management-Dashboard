@@ -26,14 +26,10 @@ import { SessionService } from 'src/session.service'
 import { UserService } from 'src/user/user.service'
 import { RemoveUserDto } from './dto/remove-user.dto'
 import { DeleteProjectDto } from './dto/delete-project.dto'
-import { ProjectCommunication } from './project.communication'
 
 @UseFilters(new WsCatchAllFilter())
 @WebSocketGateway()
-export class ProjectGateway
-  extends GatewayConnections
-  implements OnGatewayInit
-{
+export class ProjectGateway extends GatewayConnections {
   @WebSocketServer()
   io: Server
 
@@ -41,15 +37,11 @@ export class ProjectGateway
     private readonly projectService: ProjectService,
     private notificationService: NotificationService,
     private sessionService: SessionService,
-    private userService: UserService,
-    private projectCommunication: ProjectCommunication
+    private userService: UserService
   ) {
     super()
   }
-  afterInit(server: any) {
-    this.projectCommunication.setProjectNamespace(server)
-    this.projectCommunication.setUserIdMap(this.userIdToSocketIdMap)
-  }
+
   @UseGuards(AdminUserGuard)
   @SubscribeMessage('updateProject')
   async update(
@@ -65,7 +57,7 @@ export class ProjectGateway
 
     this.io
       .to(updateProjectDto.id)
-      .emit('projectUpdated', { updatedProject, updatedBy: client.userId })
+      .emit('projectUpdated', { updatedProject, updatedBy: client.username })
 
     console.log(new Date().getTime() - startTime)
   }

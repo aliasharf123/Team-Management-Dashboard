@@ -4,10 +4,10 @@ import useUser from "@/hooks/useUser";
 import { ActionIcon, Group, Text, Tooltip, rem } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import { addProject } from "@/lib/actions/addProject";
+import Link from "next/link";
 
 export default function ProjectsList() {
-  const { data, loading, error } = useUser();
-  console.log(data)
+  const { data, loading, error } = useUser<any[]>("user/project");
   return (
     <div className={classes.section}>
       <Group className={classes.collectionsHeader} justify="space-between">
@@ -24,16 +24,15 @@ export default function ProjectsList() {
         </Tooltip>
       </Group>
       <div className={classes.collections}>
-        {data?.projects.length ? (
-          data?.projects.map((project : any) => (
-            <a
-              href="#"
-              onClick={(event) => event.preventDefault()}
+        {data && data.length ? (
+          data.map((project: any) => (
+            <Link
+              href={`/dashboard/${project._id}`}
               key={project.title}
               className={classes.collectionLink}
             >
-              {project._id}
-            </a>
+              {project.title}
+            </Link>
           ))
         ) : (
           <h1 className={classes.collectionLink}>empty</h1>

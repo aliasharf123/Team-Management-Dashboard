@@ -5,9 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { Project, ProjectSchema } from './schemas/project.schema'
 import { ProjectController } from './project.controller'
 import { ProjectRepository } from './project.repository'
-import { NotificationService } from 'src/notification/notification.service'
 import { NotificationModule } from 'src/notification/notification.module'
-import { ProjectCommunication } from './project.communication'
 
 @Global()
 @Module({
@@ -15,13 +13,8 @@ import { ProjectCommunication } from './project.communication'
     MongooseModule.forFeature([{ name: Project.name, schema: ProjectSchema }]),
     NotificationModule,
   ],
-  providers: [
-    ProjectGateway,
-    ProjectService,
-    ProjectRepository,
-    ProjectCommunication,
-  ],
+  providers: [ProjectGateway, ProjectService, ProjectRepository],
   controllers: [ProjectController],
-  exports: [ProjectService, ProjectRepository, ProjectCommunication],
+  exports: [ProjectService, ProjectRepository],
 })
 export class ProjectModule {}

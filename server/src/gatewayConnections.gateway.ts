@@ -20,6 +20,8 @@ export class GatewayConnections
     client.broadcast.emit('user_added', {
       description: 'new client, welcome ' + client.id,
     })
+    console.log(client.id)
+
     await this.joinUsersToRooms(client)
   }
   // hook method

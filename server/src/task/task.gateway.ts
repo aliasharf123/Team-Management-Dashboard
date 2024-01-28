@@ -3,8 +3,6 @@ import {
   SubscribeMessage,
   MessageBody,
   WebSocketServer,
-  OnGatewayInit,
-  ConnectedSocket,
 } from '@nestjs/websockets'
 import { TaskService } from './task.service'
 import { CreateTaskDto } from './dto/create-task.dto'
@@ -14,16 +12,13 @@ import { UseFilters, UseGuards, ValidationPipe } from '@nestjs/common'
 import { AdminUserGuard } from 'src/auth/guard/admin-user.guard'
 import { Namespace } from 'socket.io'
 import { WsCatchAllFilter } from 'src/expections/ws-catch-all-filters'
-import { ProjectCommunication } from 'src/project/project.communication'
-import { AdminSocket } from 'src/auth/types'
-import { Types } from 'mongoose'
 import { RemoveTagDto } from './dto/remove-tag.dto'
 import { CreateTagDto } from './dto/create-tag.dto'
 import { AssignUserDto } from './dto/assign-user.dto'
 
 @UseGuards(AdminUserGuard)
 @UseFilters(new WsCatchAllFilter())
-@WebSocketGateway({ namespace: 'task' })
+@WebSocketGateway()
 export class TaskGateway extends GatewayConnections {
   @WebSocketServer()
   private io: Namespace

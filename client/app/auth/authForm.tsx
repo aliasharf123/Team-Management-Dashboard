@@ -7,43 +7,43 @@ export default function Form() {
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  
+
   // sign in with google provider
   const signInWithGoogle = () => {};
 
-  function validatePassword(password: string): boolean {
-    if (
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*()_+!]).{8,}$/.test(
-        password
-      )
-    ) {
-      const invalidRules: string[] = [];
-      if (password.length < 8) {
-        invalidRules.push("Password should be at least 8 characters long.");
-      }
-      if (!/[a-z]/.test(password)) {
-        invalidRules.push(
-          "Password should contain at least one lowercase letter."
-        );
-      }
-      if (!/[A-Z]/.test(password)) {
-        invalidRules.push(
-          "Password should contain at least one uppercase letter."
-        );
-      }
-      if (!/\d/.test(password)) {
-        invalidRules.push("Password should contain at least one digit.");
-      }
-      if (!/[@#$%^&*()_+!]/.test(password)) {
-        invalidRules.push(
-          "Password should contain at least one special character (e.g., @#$%^&*()_+!)."
-        );
-      }
-      setError(`Password is not valid. ${invalidRules.join(" ")}`);
-      return false;
-    }
-    return true;
-  }
+  // function validatePassword(password: string): boolean {
+  //   if (
+  //     !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*()_+!]).{8,}$/.test(
+  //       password
+  //     )
+  //   ) {
+  //     const invalidRules: string[] = [];
+  //     if (password.length < 8) {
+  //       invalidRules.push("Password should be at least 8 characters long.");
+  //     }
+  //     if (!/[a-z]/.test(password)) {
+  //       invalidRules.push(
+  //         "Password should contain at least one lowercase letter."
+  //       );
+  //     }
+  //     if (!/[A-Z]/.test(password)) {
+  //       invalidRules.push(
+  //         "Password should contain at least one uppercase letter."
+  //       );
+  //     }
+  //     if (!/\d/.test(password)) {
+  //       invalidRules.push("Password should contain at least one digit.");
+  //     }
+  //     if (!/[@#$%^&*()_+!]/.test(password)) {
+  //       invalidRules.push(
+  //         "Password should contain at least one special character (e.g., @#$%^&*()_+!)."
+  //       );
+  //     }
+  //     setError(`Password is not valid. ${invalidRules.join(" ")}`);
+  //     return false;
+  //   }
+  //   return true;
+  // }
 
   // sign in with email and password
   const signInWithPassWord = async (event: any) => {
@@ -55,10 +55,10 @@ export default function Form() {
     ) as any;
 
     if (formData.email && formData.password) {
-      // vaildate a password
-      if (!validatePassword(formData.password)) {
-        return;
-      }
+      // // vaildate a password
+      // if (!validatePassword(formData.password)) {
+      //   return;
+      // }
 
       // start loading
       setIsLoading(true);
@@ -85,8 +85,8 @@ export default function Form() {
       // return a jwt access token
       const jwtToken = await res.json();
       await setCookies(jwtToken.access_token);
-      // remove error 
-      setError('')
+      // remove error
+      setError("");
       // end loading
       setIsLoading(false);
     } else {

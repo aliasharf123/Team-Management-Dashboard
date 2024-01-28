@@ -1,21 +1,16 @@
-import React from 'react'
-import { UserDoc } from '../../../server/src/user/types'
-import { cookies } from 'next/headers';
-
+import React from "react";
+import { UserDoc } from "../../../server/src/user/types";
+import { cookies } from "next/headers";
 
 export default async function Page() {
-  const cookieStore = cookies()
-  const res = await fetch(process.env.NEXT_PUBLIC_Server_Url + 'user' , {
-    method :'GET' ,
-    headers:{
-      Authorization : "Bearer "+ cookieStore.get('access_token')?.value
-    }
+  const cookieStore = cookies();
+  const res = await fetch(process.env.NEXT_PUBLIC_Server_Url + "user", {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + cookieStore.get("access_token")?.value,
+    },
   });
-  const userInfo : UserDoc =  await res.json();
+  const userInfo: UserDoc = await res.json();
 
-  return (
-    <>
-      s
-    </>
-  )
+  return <>Select project</>;
 }
