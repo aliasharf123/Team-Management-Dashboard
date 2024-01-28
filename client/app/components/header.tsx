@@ -9,7 +9,7 @@ export const options = ["Product", "Blog", "Docs"];
 export default function Header() {
   return (
     <header className="fixed w-full z-40   justify-center leading-[13.6px] md:leading-[17.6px]  flex  top-0 ">
-      <div className="bg-white mt-[5.4px] md:mt-[20px] drop-shadow-sm max-md:w-full md:gap-12 justify-between mx-2  flex pl-[14px] md:pl-[18px] pr-[8px] box-border  py-[8px] bg-opacity-95  rounded-[14px]">
+      <div className="bg-[rgba(255,255,255,0.9)] backdrop-blur-[5px] mt-[5.4px] inner md:mt-[20px] drop-shadow-sm max-md:w-full md:gap-12 justify-between mx-2  flex pl-[14px] md:pl-[18px] pr-[8px] box-border  py-[8px] rounded-[14px]">
         <div className="flex">
           <Link href={"/"} className="flex gap-1 items-center font-bold">
             <Image
