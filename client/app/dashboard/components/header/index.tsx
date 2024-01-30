@@ -16,7 +16,7 @@ import SearchInput from "./searchInput";
 
 export default function Header() {
   return (
-    <div className="w-full flex justify-between p-4  gap-5 sticky top-0  items-center bg-[rgba(255,255,255,0.8)] backdrop-blur-sm border-b ">
+    <div className="w-full flex justify-between p-4 py-3  gap-5 sticky top-0  items-center blurBackground border-b ">
       <div className="w-96">
         <SearchInput />
       </div>

@@ -23,6 +23,9 @@
   .paddingStyle {
     @apply rounded-[10px] px-[14px] pt-[12px] pb-[10px];
   }
+  .blurBackground {
+    @apply bg-[rgba(255,255,255,0.8)] backdrop-blur-sm;
+  }
 }
 #or {
   position: relative;

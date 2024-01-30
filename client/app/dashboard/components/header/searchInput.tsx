@@ -22,9 +22,10 @@ export default function SearchInput() {
     <>
       <Button
         variant="faded"
-        size="lg"
+        size="md"
         onPress={onOpen}
-        className="w-64  justify-start rounded-xl border-none text-slate-500 "
+        radius="md"
+        className="w-72  justify-start  border-none text-slate-500 "
       >
         <PiMagnifyingGlassBold className="text-black/50  mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none " />
         search
