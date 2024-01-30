@@ -12,5 +12,5 @@ export default async function Page() {
   });
   const userInfo: UserDoc = await res.json();
 
-  return <>Select project</>;
+  return <div className="h-[200000px] bg-slate-100">Select project</div>;
 }

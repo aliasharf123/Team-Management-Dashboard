@@ -1,5 +1,5 @@
-import { NavbarSearch } from "@/components/NavabarSearch/NavbarSearch";
-import React from "react";
+import SideBar from "./components/sideBar";
+import Header from "./components/header";
 
 export default function Layout({
   children, // will be a page or nested layout
@@ -8,10 +8,11 @@ export default function Layout({
 }) {
   return (
     <>
-      <div className="fixed overflow-x-hidden left-0 top-0 z-10 h-full">
-        <NavbarSearch />
+      <SideBar />
+      <div className="ml-[230px]">
+        <Header />
+        {children}
       </div>
-      <div className=" ml-[250px]">{children}</div>
     </>
   );
 }
