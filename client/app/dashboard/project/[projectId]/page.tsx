@@ -1,5 +1,6 @@
 import React from "react";
 import ProjectInfo from "./ProjectInfo";
+import TaskCard from "@/components/TaskCard";
 
 export default function Page({
   params: { projectId },
@@ -9,7 +10,9 @@ export default function Page({
   return (
     <div className=" ">
       <ProjectInfo />
-      <div className="bg-slate-100 h-[10000px]">asdklasjlkdjsa</div>
+      <div className="bg-slate-100 p-2 h-[10000px]">
+        <TaskCard />
+      </div>
     </div>
   );
 }

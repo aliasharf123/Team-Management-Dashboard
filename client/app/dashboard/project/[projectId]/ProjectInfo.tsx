@@ -1,6 +1,6 @@
 "use client";
 import AvatarGroupHandler from "@/components/nextui-handles/AvatarGroup";
-import BreadcrumbsHandler from "@/components/nextui-handles/Breadcrumbs";
+import { Divider } from "@nextui-org/react";
 import { Button, Tooltip } from "@nextui-org/react";
 import React from "react";
 import { FaPlus } from "react-icons/fa6";
@@ -8,15 +8,16 @@ import { PiUsersThree } from "react-icons/pi";
 import { PiNotePencilBold } from "react-icons/pi";
 import { Tabs, Tab, Chip } from "@nextui-org/react";
 import { PiStarFill } from "react-icons/pi";
-import { PiListBulletsBold } from "react-icons/pi";
-import { PiKanbanBold } from "react-icons/pi";
+import { BsKanbanFill as PiKanbanBold } from "react-icons/bs";
+import { IoMdListBox } from "react-icons/io";
 import { PiFunnelBold } from "react-icons/pi";
+import { MdFilterList as CgSortAz } from "react-icons/md";
+
 export default function ProjectInfo() {
   return (
-    <div className="sticky top-[65px] stickyPos  w-full flex flex-col border-b gap-[0.6rem] blurBackground  px-4 pt-3">
+    <div className="sticky top-[65px] z-50 stickyPos  w-full flex flex-col border-b gap-[0.6rem] blurBackground  px-4 pt-3">
       <div className="flex justify-between">
         <div className="flex flex-col  gap-[0.6rem]">
-          <BreadcrumbsHandler />
           <div className="flex items-center gap-3">
             <h1 className="font-semibold text-2xl">Test Project</h1>
             <PiNotePencilBold className="text-gray-400" size={20} />
@@ -32,8 +33,8 @@ export default function ProjectInfo() {
             </Tooltip>
           </div>
         </div>
-        <div className="flex gap-1">
-          <Button variant="light" isIconOnly aria-label="Like">
+        <div className="flex gap-1 items-center">
+          <Button variant="bordered" isIconOnly aria-label="Like">
             <PiStarFill size={20} className="text-yellow-400" />
           </Button>
           <Button startContent={<FaPlus />} color="primary">
@@ -82,31 +83,41 @@ export default function ProjectInfo() {
           />
         </Tabs>
         <div>
-          <div className="flex gap-1 ">
-            <Button
-              startContent={<PiListBulletsBold size={15} />}
-              size="sm"
-              color="default"
-              variant="ghost"
-            >
-              List View
-            </Button>
-            <Button
-              startContent={<PiKanbanBold size={15} />}
-              color="default"
-              size="sm"
-              variant="ghost"
-            >
-              Kanban View
-            </Button>
-            <Button
-              startContent={<PiFunnelBold size={15} />}
-              color="default"
-              size="sm"
-              variant="ghost"
-            >
-              Filters
-            </Button>
+          <div className="flex gap-3  ">
+            <div className="flex items-center">
+              <Tooltip content="List view">
+                <Button size="sm" isIconOnly color="default" variant="light">
+                  <IoMdListBox size={20} />{" "}
+                </Button>
+              </Tooltip>
+              <Divider className="h-4 " orientation="vertical" />
+              <Tooltip content="Kanban view">
+                <Button color="default" size="sm" isIconOnly variant="light">
+                  <PiKanbanBold size={15} />
+                </Button>
+              </Tooltip>
+            </div>
+            <div className="flex items-center">
+              <Button
+                endContent={<PiFunnelBold size={20} />}
+                color="default"
+                size="sm"
+                className="font-medium"
+                variant="light"
+              >
+                Filter
+              </Button>
+              <Divider className="h-4 " orientation="vertical" />
+              <Button
+                endContent={<CgSortAz size={20} />}
+                color="default"
+                size="sm"
+                variant="light"
+                className="font-medium "
+              >
+                Sort by
+              </Button>
+            </div>
           </div>
         </div>
       </div>
