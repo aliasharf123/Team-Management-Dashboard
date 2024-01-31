@@ -23,17 +23,22 @@ import {
   cn,
 } from "@nextui-org/react";
 import AvatarGroupHandler from "../nextui-handles/AvatarGroup";
-export default function TaskCard() {
-  const iconClasses =
-    "text-xl text-default-500 pointer-events-none flex-shrink-0";
 
+type TaskType = {
+  note?: boolean;
+  files?: boolean;
+};
+export const iconClasses =
+  "text-xl text-default-500 pointer-events-none flex-shrink-0";
+
+export default function TaskCard({ note, files }: TaskType) {
   const formateDueDate = (data: Date) => {
     return data.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   };
 
   return (
-    <Card className="py-4 max-w-[270px] shadow-none w-fit">
-      <CardHeader className="pb-0  pt-2 px-4 flex justify-between items-center">
+    <Card className="py-2 w-[270px] shadow-none ">
+      <CardHeader className="pb-0  pt-2  flex justify-between items-center">
         <div className="flex gap-1">
           <Chip className="font-medium" variant="flat" size="sm">
             Small
@@ -78,19 +83,23 @@ export default function TaskCard() {
         </Dropdown>
       </CardHeader>
       <CardBody className="overflow-visible flex flex-col gap-2 py-2">
-        <Image
-          alt="Card background"
-          className="object-cover rounded-xl"
-          src="https://th.bing.com/th/id/OIP.Z_PIeIRDajXPmZHROt-T_QHaEK?w=312&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7"
-          width={250}
-        />
+        {files && (
+          <Image
+            alt="Card background"
+            className="object-cover rounded-xl"
+            src="https://th.bing.com/th/id/OIP.Z_PIeIRDajXPmZHROt-T_QHaEK?w=312&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7"
+            width={250}
+          />
+        )}
         <div className="grid gap-1">
           <h1 lang="de" className="text-lg font-semibold hyphens-auto">
             User Validation and authentication asjdhsa
           </h1>
-          <p className="hyphens-auto text-default-600  leading-6">
-            laslodijalidsjkajoi jqokadojodsajkj nkjsan djan jnaoj noaso aso{" "}
-          </p>
+          {note && (
+            <p className="hyphens-auto text-default-600  leading-6">
+              laslodijalidsjkajoi jqokadojodsajkj nkjsan djan jnaoj noaso aso{" "}
+            </p>
+          )}
         </div>
         <div>
           <Chip
@@ -98,7 +107,7 @@ export default function TaskCard() {
             variant="light"
             color="default"
             size="sm"
-            className="text-default-600 font-medium"
+            className="text-default-600 p-0 font-medium"
           >
             {formateDueDate(new Date())}
           </Chip>
@@ -111,7 +120,7 @@ export default function TaskCard() {
           variant="light"
           color="default"
           size="sm"
-          className="text-default-600 font-medium"
+          className="text-default-600 p-0 font-medium"
         >
           12
         </Chip>

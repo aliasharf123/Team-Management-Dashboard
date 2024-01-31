@@ -27,7 +27,7 @@ export default function AvatarGroupHandler({
         total={team.length}
       >
         {team.map((value, index) => (
-          <Avatar key={index} className={avatarStyle} size="sm" src={value} />
+          <Avatar key={index} src={value} />
         ))}
       </AvatarGroup>
     </div>

@@ -53,3 +53,6 @@
 #or::after {
   right: 0;
 }
+.element::-webkit-scrollbar {
+  width: 0 !important;
+}

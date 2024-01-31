@@ -12,6 +12,7 @@ import { BsKanbanFill as PiKanbanBold } from "react-icons/bs";
 import { IoMdListBox } from "react-icons/io";
 import { PiFunnelBold } from "react-icons/pi";
 import { MdFilterList as CgSortAz } from "react-icons/md";
+import AddButton from "@/components/Button/AddButton";
 
 export default function ProjectInfo() {
   return (
@@ -26,11 +27,7 @@ export default function ProjectInfo() {
             <PiUsersThree className="text-gray-400" size={20} />
             <h1 className="text-sm font-medium">Assign to project</h1>
             <AvatarGroupHandler />
-            <Tooltip content="Add new user">
-              <Button size="sm" isIconOnly radius="full" color="primary">
-                <FaPlus />
-              </Button>
-            </Tooltip>
+            <AddButton buttonSize="sm" content="Add new user" />
           </div>
         </div>
         <div className="flex gap-1 items-center">
@@ -38,7 +35,7 @@ export default function ProjectInfo() {
             <PiStarFill size={20} className="text-yellow-400" />
           </Button>
           <Button startContent={<FaPlus />} color="primary">
-            Add Task
+            Add List
           </Button>
         </div>
       </div>

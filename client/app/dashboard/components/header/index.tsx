@@ -1,18 +1,11 @@
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Input,
-  Link,
-  User,
-} from "@nextui-org/react";
+"use client";
+import { Button, User } from "@nextui-org/react";
 import React from "react";
 import { PiBellBold, PiMagnifyingGlassBold } from "react-icons/pi";
 import { FaPlus } from "react-icons/fa6";
 import DropdownClient from "./dropdownClient";
 import SearchInput from "./searchInput";
+import AddButton from "@/components/Button/AddButton";
 
 export default function Header() {
   return (
@@ -21,9 +14,7 @@ export default function Header() {
         <SearchInput />
       </div>
       <div className="flex gap-2 justify-end items-center">
-        <Button isIconOnly radius="full" color="primary">
-          <FaPlus />
-        </Button>
+        <AddButton />
         <Button isIconOnly variant="light">
           <PiBellBold size={20} />
         </Button>

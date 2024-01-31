@@ -11,8 +11,8 @@ import {
 import { IconChevronRight } from "@tabler/icons-react";
 import classes from "./UserButton.module.css";
 import useUser from "@/hooks/useUser";
-import UserMenu from "../UserMenu";
-import { UserDoc } from "../../../server/src/user/types";
+import UserMenu from "../../UserMenu";
+import { UserDoc } from "../../../../server/src/user/types";
 
 export function UserButton() {
   const { data, error, loading } = useUser<UserDoc>("user");
