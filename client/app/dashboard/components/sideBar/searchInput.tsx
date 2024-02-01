@@ -25,10 +25,13 @@ export default function SearchInput() {
         size="md"
         onPress={onOpen}
         radius="md"
-        className="w-72  justify-start  border-none text-slate-500 "
+        className="w-full  justify-between  border-none text-slate-500 "
+        endContent={<Kbd keys={["command"]}>K</Kbd>}
       >
-        <PiMagnifyingGlassBold className="text-black/50  mb-0.5 dark:text-white/90 text-slate-400 pointer-events-none " />
-        search
+        <div className="flex items-center gap-1">
+          <PiMagnifyingGlassBold className="text-black/50 dark:text-white/90 text-slate-400 pointer-events-none " />
+          Search...
+        </div>
       </Button>
       <Modal
         isOpen={isOpen}

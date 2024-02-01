@@ -16,7 +16,7 @@ export default function AddButton({
   fn,
 }: AddButtonProb) {
   return (
-    <Tooltip content={content}>
+    <Tooltip content={content} isDisabled={!Boolean(content)}>
       <Button
         onPress={() => {
           fn && fn();

@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import React from "react";
 import logo from "../../../../public/Screenshot_2023-10-25_102037-transformed.png";
@@ -7,18 +8,24 @@ import { PiBellBold } from "react-icons/pi";
 import { PiChartBar } from "react-icons/pi";
 import { PiXCircleBold } from "react-icons/pi";
 import { PiTextAlignLeft } from "react-icons/pi";
-import Link from "next/link";
 import { IconType } from "react-icons/lib";
-
-type NavItems = {
-  name: string;
-  link: string;
-  Icon: IconType;
-}[];
-
-const mainNav: NavItems = [
+import { FiSun } from "react-icons/fi";
+import {
+  Divider,
+  Link,
+  Listbox,
+  ListboxItem,
+  ListboxSection,
+  Switch,
+  User,
+} from "@nextui-org/react";
+import DropdownClient from "./dropdownClient";
+import SearchInput from "./searchInput";
+import { FaMoon } from "react-icons/fa";
+import AddButton from "@/components/Button/AddButton";
+const mainNav = [
   {
-    name: "Home",
+    name: "Dashboard",
     link: "/",
     Icon: PiHouseBold,
   },
@@ -27,67 +34,85 @@ const mainNav: NavItems = [
     link: "/tasks",
     Icon: PiCheckCircleBold,
   },
-  { name: "Inbox", link: "/Inbox", Icon: PiBellBold },
-];
-const reportNav: NavItems = [
-  {
-    name: "Goals",
-    link: "/",
-    Icon: PiChartBar,
-  },
+  { name: "Notification", link: "/Notification", Icon: PiBellBold },
   {
     name: "Profiles",
     link: "/tasks",
     Icon: PiXCircleBold,
   },
-];
-
-const mockData = [
-  { name: "i love asdhasdlnasdlsadsadsadada", color: "#47D9FC" },
-  { name: "i love asdhasdlnasdlsadsadsadada", color: "#FB49A4" },
+  {
+    name: "Calender",
+    link: "/Calender",
+    Icon: PiXCircleBold,
+  },
 ];
 
 export default function SideBar() {
+  const iconClasses =
+    "text-xl text-default-500 pointer-events-none flex-shrink-0";
+
   return (
-    <div className="fixed  text-Enerie-Black h-screen top-0 left-0 border py-10 pl-1 pr-8 w-[230px]">
-      <div className="flex pl-4 justify-between items-center mb-10">
-        <div className="flex gap-2 items-center font-bold font-sans">
-          <Image width={25} height={25} src={logo} alt="logo" />
-          <h1 className="text-lg">Weka</h1>
-        </div>
-        <PiTextAlignLeft size={23} />
-      </div>
-      <div className="grid gap-3 pl-2 text-sm font-semibold">
-        <NavigateItemComponent navItems={mainNav} />
-        <h1 className="text-[#787878] pl-2">Reporting</h1>
-        <NavigateItemComponent navItems={reportNav} />
-        <h1 className="text-[#787878] pl-2">Projects</h1>
-        <div className="flex overflow-hidden flex-col relative gap-4">
-          {mockData.map((value) => (
-            <div className="flex gap-3 pl-2 items-center" key={value.name}>
-              <div
-                style={{ backgroundColor: value.color }}
-                className="w-4  rounded h-3"
+    <div className="sticky  text-Enerie-Black h-screen flex flex-col justify-between top-0 left-0 border py-6 px-4 w-[280px]">
+      <div className="flex flex-col gap-5">
+        <DropdownClient>
+          <User
+            as="button"
+            avatarProps={{
+              isBordered: true,
+              src: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+            }}
+            className="transition-transform justify-start"
+            description="@tonyreichert"
+            name="Tony Reichert"
+          />
+        </DropdownClient>
+        <SearchInput />
+        <div className="w-full  rounded-small border-default-200 dark:border-default-100">
+          <Listbox
+            items={mainNav}
+            variant="faded"
+            classNames={{
+              list: "gap-1",
+            }}
+            aria-label="Listbox menu with icons"
+          >
+            {(value) => (
+              <ListboxItem
+                key={value.name}
+                classNames={{
+                  title: "font-medium",
+                  base: "py-2",
+                }}
+                startContent={<value.Icon className={iconClasses} />}
               >
-                {" "}
-              </div>
-              <h1 className="truncate">{value.name}</h1>
-            </div>
-          ))}
+                {value.name}
+              </ListboxItem>
+            )}
+          </Listbox>
+          <Divider className="my-4" />
+          <div className="bg-default-100 rounded-lg p-6 flex flex-col items-center">
+            <AddButton content="" />
+            <h1 className="font-bold">Add new Project</h1>
+            <h1 className="text-xs font-medium">
+              or use <span className="text-primary">invite link</span>
+            </h1>
+          </div>
         </div>
       </div>
+      <Switch
+        defaultSelected
+        size="md"
+        color="primary"
+        thumbIcon={({ isSelected, className }) =>
+          isSelected ? (
+            <FiSun className={className} />
+          ) : (
+            <FaMoon className={className} />
+          )
+        }
+      >
+        Dark mode
+      </Switch>
     </div>
   );
 }
-
-const NavigateItemComponent = ({ navItems }: { navItems: NavItems }) =>
-  navItems.map((value) => (
-    <Link
-      className="flex gap-3  pl-2 py-2 rounded-md hover:bg-slate-200  duration-200 items-center"
-      key={value.name}
-      href={`/dashboard${value.link}`}
-    >
-      <value.Icon size={23} />
-      <h1>{value.name}</h1>
-    </Link>
-  ));

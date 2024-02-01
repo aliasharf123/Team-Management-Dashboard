@@ -21,7 +21,7 @@ export default function Kanban() {
   return (
     <motion.div
       ref={carousel}
-      className="overflow-x-scroll element"
+      className="overflow-x-scroll element bg-[#F9F9FB] pt-2"
       whileTap={{ cursor: "grabbing" }}
     >
       <motion.div

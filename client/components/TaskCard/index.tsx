@@ -31,11 +31,11 @@ type TaskType = {
 export const iconClasses =
   "text-xl text-default-500 pointer-events-none flex-shrink-0";
 
-export default function TaskCard({ note, files }: TaskType) {
-  const formateDueDate = (data: Date) => {
-    return data.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  };
+export const formateDueDate = (data: Date) => {
+  return data.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+};
 
+export default function TaskCard({ note, files }: TaskType) {
   return (
     <Card className="py-2 w-[270px] shadow-none ">
       <CardHeader className="pb-0  pt-2  flex justify-between items-center">

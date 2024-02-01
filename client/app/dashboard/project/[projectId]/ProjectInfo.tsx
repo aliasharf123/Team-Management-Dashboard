@@ -13,10 +13,15 @@ import { IoMdListBox } from "react-icons/io";
 import { PiFunnelBold } from "react-icons/pi";
 import { MdFilterList as CgSortAz } from "react-icons/md";
 import AddButton from "@/components/Button/AddButton";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 export default function ProjectInfo() {
+  const pathName = usePathname();
+  const router = useRouter();
+
   return (
-    <div className="sticky top-[65px] z-50 stickyPos  w-full flex flex-col border-b gap-[0.6rem] blurBackground  px-4 pt-3">
+    <div className="sticky top-0 z-50 stickyPos  w-full flex flex-col border-b gap-[0.6rem] blurBackground  px-4 pt-3">
       <div className="flex justify-between">
         <div className="flex flex-col  gap-[0.6rem]">
           <div className="flex items-center gap-3">
@@ -83,13 +88,25 @@ export default function ProjectInfo() {
           <div className="flex gap-3  ">
             <div className="flex items-center">
               <Tooltip content="List view">
-                <Button size="sm" isIconOnly color="default" variant="light">
+                <Button
+                  size="sm"
+                  onPress={() => router.push(pathName + "?v=2")}
+                  isIconOnly
+                  color="default"
+                  variant="light"
+                >
                   <IoMdListBox size={20} />{" "}
                 </Button>
               </Tooltip>
               <Divider className="h-4 " orientation="vertical" />
               <Tooltip content="Kanban view">
-                <Button color="default" size="sm" isIconOnly variant="light">
+                <Button
+                  onPress={() => router.push(pathName + "?v=1")}
+                  color="default"
+                  size="sm"
+                  isIconOnly
+                  variant="light"
+                >
                   <PiKanbanBold size={15} />
                 </Button>
               </Tooltip>

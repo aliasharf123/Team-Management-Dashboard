@@ -1,5 +1,4 @@
 import SideBar from "./components/sideBar";
-import Header from "./components/header";
 
 export default function Layout({
   children, // will be a page or nested layout
@@ -7,12 +6,9 @@ export default function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="flex">
       <SideBar />
-      <div className="ml-[230px]">
-        <Header />
-        {children}
-      </div>
-    </>
+      <div className="w-full relative overflow-x-hidden">{children}</div>
+    </div>
   );
 }
