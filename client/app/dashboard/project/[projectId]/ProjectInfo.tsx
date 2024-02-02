@@ -21,7 +21,7 @@ export default function ProjectInfo() {
   const router = useRouter();
 
   return (
-    <div className="sticky top-0 z-50 stickyPos  w-full flex flex-col border-b gap-[0.6rem] blurBackground  px-4 pt-3">
+    <div className="sticky top-0 z-50  flex flex-col border-b gap-[0.6rem] blurBackground  px-4 pt-3">
       <div className="flex justify-between">
         <div className="flex flex-col  gap-[0.6rem]">
           <div className="flex items-center gap-3">

@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
 import ProjectInfo from "./ProjectInfo";
-import TaskCard from "@/components/TaskCard";
-import TaskCardContainer from "@/components/TaskCardContainer";
-import Kanban from "@/components/TasksView/kanban";
-import ListView from "@/components/TasksView/listView";
-import TaskDetailModel from "@/components/TaskDetalModel";
+import TaskCard from "@/components/Task/TaskCard";
+import TaskCardContainer from "@/components/Task/TaskCardContainer";
+import Kanban from "@/components/Task/TasksView/kanban";
+import ListView from "@/components/Task/TasksView/listView";
+import TaskDetailModel from "@/components/Task/TaskDetalModel";
 
 export default function Page({
   params: { projectId },
@@ -14,15 +14,13 @@ export default function Page({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   return (
-    <div className=" ">
+    <div className="">
       <ProjectInfo />
-      <div>
-        {!searchParams["v"] || searchParams["v"] == "1" ? (
-          <Kanban />
-        ) : (
-          <ListView />
-        )}
-      </div>
+      {!searchParams["v"] || searchParams["v"] == "1" ? (
+        <Kanban />
+      ) : (
+        <ListView />
+      )}
       <TaskDetailModel />
     </div>
   );

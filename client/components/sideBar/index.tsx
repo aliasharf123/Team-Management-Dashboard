@@ -23,10 +23,11 @@ import DropdownClient from "./dropdownClient";
 import SearchInput from "./searchInput";
 import { FaMoon } from "react-icons/fa";
 import AddButton from "@/components/Button/AddButton";
+import { usePathname } from "next/navigation";
 const mainNav = [
   {
     name: "Dashboard",
-    link: "/",
+    link: "/dashboard",
     Icon: PiHouseBold,
   },
   {
@@ -37,7 +38,7 @@ const mainNav = [
   { name: "Notification", link: "/Notification", Icon: PiBellBold },
   {
     name: "Profiles",
-    link: "/tasks",
+    link: "/Profiles",
     Icon: PiXCircleBold,
   },
   {
@@ -48,11 +49,21 @@ const mainNav = [
 ];
 
 export default function SideBar() {
-  const iconClasses =
-    "text-xl text-default-500 pointer-events-none flex-shrink-0";
+  const iconClasses = "text-xl  pointer-events-none flex-shrink-0";
+  const pathName = usePathname();
 
+  const selectedLink = (link: string): boolean => {
+    if (link === "/dashboard") {
+      if (pathName === link) return true;
+      else return false;
+    } else if (pathName.includes(link)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   return (
-    <div className="sticky  text-Enerie-Black h-screen flex flex-col justify-between top-0 left-0 border py-6 px-4 w-[280px]">
+    <div className="sticky  text-Enerie-Black h-screen flex flex-col justify-between top-0 left-0 border py-6 px-4 w-[250px]">
       <div className="flex flex-col gap-5">
         <DropdownClient>
           <User
@@ -81,21 +92,33 @@ export default function SideBar() {
                 key={value.name}
                 classNames={{
                   title: "font-medium",
-                  base: "py-2",
+                  base: `py-2 ${
+                    selectedLink(value.link) && "bg-primary shadow-xl"
+                  }`,
                 }}
-                startContent={<value.Icon className={iconClasses} />}
+                variant={"bordered"}
+                startContent={
+                  <value.Icon
+                    className={
+                      iconClasses +
+                      `${selectedLink(value.link) ? "" : " text-default-500"}`
+                    }
+                  />
+                }
               >
                 {value.name}
               </ListboxItem>
             )}
           </Listbox>
           <Divider className="my-4" />
-          <div className="bg-default-100 rounded-lg p-6 flex flex-col items-center">
+          <div className="bg-default-100 text-center rounded-lg p-6 flex gap-1 flex-col items-center">
             <AddButton content="" />
-            <h1 className="font-bold">Add new Project</h1>
-            <h1 className="text-xs font-medium">
-              or use <span className="text-primary">invite link</span>
-            </h1>
+            <div>
+              <h1 className="font-bold">Add new Project</h1>
+              <h1 className="text-xs font-medium">
+                or use <span className="text-primary">invite link</span>
+              </h1>
+            </div>
           </div>
         </div>
       </div>

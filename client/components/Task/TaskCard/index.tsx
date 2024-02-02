@@ -22,7 +22,8 @@ import {
   Button,
   cn,
 } from "@nextui-org/react";
-import AvatarGroupHandler from "../nextui-handles/AvatarGroup";
+import AvatarGroupHandler from "../../nextui-handles/AvatarGroup";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type TaskType = {
   note?: boolean;
@@ -36,6 +37,15 @@ export const formateDueDate = (data: Date) => {
 };
 
 export default function TaskCard({ note, files }: TaskType) {
+  const searchParams = useSearchParams();
+  const pathName = usePathname();
+  const router = useRouter();
+
+  const openTaskModel = () => {
+    const params = new URLSearchParams(searchParams);
+    params.append("p", "2");
+    router.push(pathName + "?" + params.toString(), { scroll: false });
+  };
   return (
     <Card className="py-2 w-[270px] shadow-none ">
       <CardHeader className="pb-0  pt-2  flex justify-between items-center">
@@ -64,6 +74,7 @@ export default function TaskCard({ note, files }: TaskType) {
             <DropdownItem
               key="edit"
               shortcut="⌘⇧E"
+              onPress={openTaskModel}
               startContent={<ImEnlarge2 className={iconClasses} />}
             >
               Open Task

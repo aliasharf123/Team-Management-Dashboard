@@ -13,6 +13,14 @@
 .textStyle {
   font-family: sans-serif;
 }
+.tiptap p.is-empty::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
 @layer components {
   .inputAuth {
     @apply p-4 outline-none bg-gray-100 rounded-md  border-transparent border-2 focus:border-blue-400 duration-200;

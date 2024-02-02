@@ -14,14 +14,14 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import { FaPlus } from "react-icons/fa6";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { iconClasses } from "../TaskCard";
-import AddButton from "../Button/AddButton";
+import AddButton from "../../Button/AddButton";
 export default function TaskCardContainer({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col ml-8 gap-4">
+    <div className="flex flex-col  gap-4">
       <Card
         classNames={{
           body: "flex  justify-between",

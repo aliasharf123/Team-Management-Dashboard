@@ -19,7 +19,7 @@ import { IconEyeDiscount } from "@tabler/icons-react";
 import React, { useCallback } from "react";
 import { FiSearch } from "react-icons/fi";
 import { MdContentCopy } from "react-icons/md";
-import AvatarGroupHandler from "../nextui-handles/AvatarGroup";
+import AvatarGroupHandler from "../../nextui-handles/AvatarGroup";
 import { formateDueDate } from "../TaskCard";
 import { IoEyeOutline, IoSearchCircleOutline } from "react-icons/io5";
 import { MdDeleteOutline } from "react-icons/md";
