@@ -290,19 +290,19 @@ const CommandList = ({
       va.track("Slash Command Used", {
         command: item.title,
       });
-      // if (item) {
-      //   if (item.title === "Continue writing") {
-      //     if (isLoading) return;
-      //     complete(
-      //       getPrevText(editor, {
-      //         chars: 5000,
-      //         offset: 1,
-      //       })
-      //     );
-      //   } else {
-      //     command(item);
-      //   }
-      // }
+      if (item) {
+        if (item.title === "Continue writing") {
+          // if (isLoading) return; // fro ai
+          // complete(
+          //   getPrevText(editor, {
+          //     chars: 5000,
+          //     offset: 1,
+          //   })
+          // );
+        } else {
+          command(item);
+        }
+      }
     },
     [
       // complete,isLoading,
@@ -370,7 +370,7 @@ const CommandList = ({
             onClick={() => selectItem(index)}
             key={item.title}
             textValue={item.title}
-            autoFocus={Boolean(index == selectedIndex)}
+            className={selectedIndex == index ? "bg-default-100" : ""}
             startContent={<div>{item.icon as any}</div>}
           >
             <div className="flex gap-2 items-center">

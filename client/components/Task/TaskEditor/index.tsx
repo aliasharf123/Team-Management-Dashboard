@@ -1,17 +1,19 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
+
 import { EditorContent } from "@tiptap/react";
-import BubbleMenuHandle from "./BubbleMenuHandle";
 import { useEditor } from "@tiptap/react";
 import { defaultExtensions } from "./extensions";
+import EditorBubbleMenu from "./bubble-menu";
 // import BubbleMenu from "@tiptap/extension-bubble-menu";
 export default function TaskEditor() {
+  const taskName = 2;
   const editor = useEditor({
     extensions: [...defaultExtensions],
     content: `
-        <h2>
-          Hi there,
-        </h2>
+        <h1>
+          ${taskName},
+        </h1>
         <ul data-type="taskList">
           <li data-type="taskItem" data-checked="true">A list item</li>
           <li data-type="taskItem" data-checked="false">And another one</li>
@@ -44,8 +46,18 @@ export default function TaskEditor() {
       `,
     editorProps: {
       attributes: {
-        class:
-          "prose dark:prose-invert  prose-p:prose-base prose-xl m-5 focus:outline-none",
+        class: "prose dark:prose-invert m-5 focus:outline-none",
+      },
+      handleDOMEvents: {
+        keydown: (_view, event) => {
+          // prevent default event listeners from firing when slash command is active
+          if (["ArrowUp", "ArrowDown", "Enter"].includes(event.key)) {
+            const slashCommand = document.querySelector("#slash-command");
+            if (slashCommand) {
+              return true;
+            }
+          }
+        },
       },
     },
   });
@@ -53,7 +65,7 @@ export default function TaskEditor() {
   if (!editor) return null;
   return (
     <div>
-      {editor && <BubbleMenuHandle editor={editor} />}
+      {editor && <EditorBubbleMenu editor={editor} />}
       <EditorContent className="" editor={editor} />
     </div>
   );
