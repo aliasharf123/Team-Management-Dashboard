@@ -1,0 +1,10 @@
+.item {
+  display: flex;
+  align-items: center;
+}
+
+.symbol {
+  font-size: rem(30px);
+  font-weight: 700;
+  width: rem(60px);
+}

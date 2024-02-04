@@ -5,6 +5,9 @@ import { EditorContent } from "@tiptap/react";
 import { useEditor } from "@tiptap/react";
 import { defaultExtensions } from "./extensions";
 import EditorBubbleMenu from "./bubble-menu";
+import TextareaAutosize from "react-textarea-autosize";
+import Properties from "./properties";
+import { Divider } from "@nextui-org/react";
 // import BubbleMenu from "@tiptap/extension-bubble-menu";
 export default function TaskEditor() {
   const taskName = 2;
@@ -14,6 +17,8 @@ export default function TaskEditor() {
         <h1>
           ${taskName},
         </h1>
+        <react-component count="0"></react-component>
+
         <ul data-type="taskList">
           <li data-type="taskItem" data-checked="true">A list item</li>
           <li data-type="taskItem" data-checked="false">And another one</li>
@@ -46,7 +51,7 @@ export default function TaskEditor() {
       `,
     editorProps: {
       attributes: {
-        class: "prose dark:prose-invert m-5 focus:outline-none",
+        class: "prose dark:prose-invert w-full focus:outline-none",
       },
       handleDOMEvents: {
         keydown: (_view, event) => {
@@ -64,7 +69,14 @@ export default function TaskEditor() {
 
   if (!editor) return null;
   return (
-    <div>
+    <div className="">
+      <TextareaAutosize
+        className="text-5xl w-full 
+         bg-transparent font-bold hyphens-auto outline-none mb-3 resize-none"
+      />
+      <Properties />
+      {/* <Divider className="my-4 h-[0.4px]" /> */}
+
       {editor && <EditorBubbleMenu editor={editor} />}
       <EditorContent className="" editor={editor} />
     </div>

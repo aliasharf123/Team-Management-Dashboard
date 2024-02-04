@@ -11,8 +11,6 @@ import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import { InputRule } from "@tiptap/core";
 import DragAndDrop from "./drag-drop";
 import Link from "@tiptap/extension-link";
-import { CustomPlaceholder } from "./place-holder";
-import { CustomDocument } from "./top-content";
 import Placeholder from "@tiptap/extension-placeholder";
 import CustomKeymap from "./custome-keymap";
 export const defaultExtensions = [
@@ -43,7 +41,6 @@ export const defaultExtensions = [
       }
     },
   }),
-  CustomDocument,
   DragAndDrop,
   HorizontalRule.extend({
     addInputRules() {

@@ -11,7 +11,7 @@ export default function Page() {
         <Options />
       </div>
       <div className="flex justify-center">
-        <div className="max-w-3xl">
+        <div className="max-w-3xl mt-24">
           <FullPageTask />
         </div>
       </div>

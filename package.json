@@ -15,6 +15,7 @@
         "stop": "docker-compose down"
     },
     "dependencies": {
+        "@hello-pangea/dnd": "^16.5.0",
         "@mantine/ds": "^7.2.2",
         "@nestjs/config": "^3.1.1",
         "@nestjs/jwt": "^10.1.1",
@@ -50,6 +51,7 @@
         "passport": "^0.6.0",
         "passport-jwt": "^4.0.1",
         "react-icons": "^5.0.1",
+        "react-textarea-autosize": "^8.5.3",
         "sass": "^1.70.0",
         "typewriter-effect": "^2.21.0",
         "wait-on": "^3.3.0"

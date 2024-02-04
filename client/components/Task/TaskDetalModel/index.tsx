@@ -52,7 +52,6 @@ export default function TaskDetailModel() {
             x: 200,
             opacity: 0,
             transition: {
-              duration: 0.1,
               ease: "easeIn",
             },
           },
