@@ -26,6 +26,7 @@
         "@nestjs/websockets": "^10.2.10",
         "@tabler/icons-react": "^2.40.0",
         "@tiptap/extension-bubble-menu": "^2.2.1",
+        "@tiptap/extension-collaboration": "^2.2.1",
         "@tiptap/extension-document": "^2.2.1",
         "@tiptap/extension-highlight": "^2.2.1",
         "@tiptap/extension-link": "^2.2.1",
@@ -54,7 +55,11 @@
         "react-textarea-autosize": "^8.5.3",
         "sass": "^1.70.0",
         "typewriter-effect": "^2.21.0",
-        "wait-on": "^3.3.0"
+        "wait-on": "^3.3.0",
+        "y-prosemirror": "^1.2.2",
+        "y-webrtc": "^10.3.0",
+        "y-websocket": "^1.5.3",
+        "yjs": "^13.6.11"
     },
     "devDependencies": {
         "@tailwindcss/typography": "^0.5.10",
