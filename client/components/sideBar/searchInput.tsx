@@ -25,11 +25,11 @@ export default function SearchInput() {
         size="md"
         onPress={onOpen}
         radius="md"
-        className="w-full  justify-between  border-none text-slate-500 "
+        className="w-full  justify-between  border-none "
         endContent={<Kbd keys={["command"]}>K</Kbd>}
       >
-        <div className="flex items-center gap-1">
-          <PiMagnifyingGlassBold className="text-black/50 dark:text-white/90 text-slate-400 pointer-events-none " />
+        <div className="flex items-center text-foreground gap-1">
+          <PiMagnifyingGlassBold className="text-black/50 dark:text-white/90  pointer-events-none " />
           Search...
         </div>
       </Button>
@@ -39,11 +39,10 @@ export default function SearchInput() {
         onOpenChange={onOpenChange}
         size="xl"
         classNames={{
-          base: "bg-[rgba(255,255,255,0.8)] px-0  backdrop-blur-sm",
-          header: "px-4 border-b-[1px] border-b-gray-400 py-0 ",
-          body: "border-t-2",
+          base: "dark:bg-black/80 dark:border-[1px] border-divider bg-white/80 px-0  backdrop-blur-sm",
+          header: "px-4  py-0 ",
+          body: "border-t-2 border-content1",
         }}
-        className="backdrop-blur-sm "
       >
         <ModalContent>
           {(onClose) => (
@@ -61,11 +60,11 @@ export default function SearchInput() {
                     onKeyDown={(e) => {
                       if (e.code === "Escape") onClose();
                     }}
-                    className="bg-transparent outline-none font-normal text-gray-700"
+                    className="bg-transparent outline-none font-normal dark:text-white/80"
                     placeholder="Search"
                   />
                 </div>
-                <Kbd className="text-gray-700 font-medium text-xs py-1 ">
+                <Kbd className="text-gray-700 dark:text-white/80 font-medium text-xs py-1 ">
                   ESC
                 </Kbd>
               </ModalHeader>

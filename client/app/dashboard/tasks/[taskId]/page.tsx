@@ -6,7 +6,7 @@ import React from "react";
 export default function Page() {
   return (
     <div className=" ">
-      <div className="sticky z-50 flex p-2 justify-between bg-white  top-0 w-full">
+      <div className="sticky z-50 flex p-2 justify-between   top-0 w-full">
         <BreadcrumbsHandler />
         <Options />
       </div>

@@ -9,6 +9,10 @@ import { JwtModule } from '@nestjs/jwt'
 import { CommentModule } from './comment/comment.module'
 import { SessionService } from './session.service'
 import { NotificationModule } from './notification/notification.module'
+import { redisModule } from './redis/module.config'
+import { KafkaModule } from './kafka/kafka.module'
+import { ConsumerService } from './kafka/consume.service'
+import { ConsumerModule } from './kafka/consume.module'
 
 @Global()
 @Module({
@@ -21,6 +25,12 @@ import { NotificationModule } from './notification/notification.module'
       global: true,
     }),
     MongooseConfig,
+    // KafkaModule.register({
+    //   clientId: 'test-app-client',
+    //   brokers: ['localhost:9092'],
+    //   groupId: 'test-app-group',
+    // }),
+    // ConsumerModule,
     UserModule,
     ProjectModule,
     TaskModule,

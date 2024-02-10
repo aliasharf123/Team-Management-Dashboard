@@ -21,7 +21,7 @@ export default function ProjectInfo() {
   const router = useRouter();
 
   return (
-    <div className="sticky top-0 z-50  flex flex-col border-b gap-[0.6rem] blurBackground  px-4 pt-3">
+    <div className="sticky top-0 z-50  flex flex-col border-b border-divider gap-[0.6rem] blurBackground  px-4 pt-3">
       <div className="flex justify-between">
         <div className="flex flex-col  gap-[0.6rem]">
           <div className="flex items-center gap-3">
@@ -34,14 +34,6 @@ export default function ProjectInfo() {
             <AvatarGroupHandler />
             <AddButton buttonSize="sm" content="Add new user" />
           </div>
-        </div>
-        <div className="flex gap-1 items-center">
-          <Button variant="bordered" isIconOnly aria-label="Like">
-            <PiStarFill size={20} className="text-yellow-400" />
-          </Button>
-          <Button startContent={<FaPlus />} color="primary">
-            Add List
-          </Button>
         </div>
       </div>
       <div className="flex items-center w-full justify-between">

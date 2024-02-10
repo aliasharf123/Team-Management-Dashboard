@@ -1,56 +1,43 @@
 "use client";
 import Image from "next/image";
-import React from "react";
-import logo from "../../../../public/Screenshot_2023-10-25_102037-transformed.png";
-import { PiHouseBold } from "react-icons/pi";
-import { PiCheckCircleBold } from "react-icons/pi";
-import { PiBellBold } from "react-icons/pi";
-import { PiChartBar } from "react-icons/pi";
-import { PiXCircleBold } from "react-icons/pi";
-import { PiTextAlignLeft } from "react-icons/pi";
-import { IconType } from "react-icons/lib";
-import { FiSun } from "react-icons/fi";
+import React, { useState } from "react";
+import logo from "../../public/Screenshot_2023-10-25_102037-transformed.png";
+import { TbSmartHome } from "react-icons/tb";
+import { LuLayoutDashboard } from "react-icons/lu";
 import {
-  Divider,
-  Link,
+  Button,
   Listbox,
   ListboxItem,
   ListboxSection,
-  Switch,
+  ScrollShadow,
   User,
 } from "@nextui-org/react";
 import DropdownClient from "./dropdownClient";
 import SearchInput from "./searchInput";
-import { FaMoon } from "react-icons/fa";
-import AddButton from "@/components/Button/AddButton";
+import { TfiTimer } from "react-icons/tfi";
+import { HiOutlineChevronDoubleRight } from "react-icons/hi";
+import { TbCheckupList } from "react-icons/tb";
+import { RiNotificationLine } from "react-icons/ri";
 import { usePathname } from "next/navigation";
+import ThemeSwitch from "./theme-switch";
+import { IoIosAddCircle } from "react-icons/io";
 const mainNav = [
+  { name: "Notification", Icon: RiNotificationLine },
+
   {
-    name: "Dashboard",
-    link: "/dashboard",
-    Icon: PiHouseBold,
-  },
-  {
-    name: "My Tasks",
-    link: "/tasks",
-    Icon: PiCheckCircleBold,
-  },
-  { name: "Notification", link: "/Notification", Icon: PiBellBold },
-  {
-    name: "Profiles",
-    link: "/Profiles",
-    Icon: PiXCircleBold,
+    name: "Add Project ",
+    Icon: IoIosAddCircle,
   },
   {
     name: "Calender",
-    link: "/Calender",
-    Icon: PiXCircleBold,
+    Icon: TfiTimer,
   },
 ];
 
 export default function SideBar() {
   const iconClasses = "text-xl  pointer-events-none flex-shrink-0";
   const pathName = usePathname();
+  const [open, setOpen] = useState(true);
 
   const selectedLink = (link: string): boolean => {
     if (link === "/dashboard") {
@@ -63,79 +50,106 @@ export default function SideBar() {
     }
   };
   return (
-    <div className="sticky  text-Enerie-Black h-screen flex flex-col justify-between top-0 left-0 border py-6 px-4 w-[250px]">
-      <div className="flex flex-col gap-5">
-        <DropdownClient>
-          <User
-            as="button"
-            avatarProps={{
-              isBordered: true,
-              src: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
-            }}
-            className="transition-transform justify-start"
-            description="@tonyreichert"
-            name="Tony Reichert"
-          />
-        </DropdownClient>
-        <SearchInput />
-        <div className="w-full  rounded-small border-default-200 dark:border-default-100">
-          <Listbox
-            items={mainNav}
-            variant="faded"
-            classNames={{
-              list: "gap-1",
-            }}
-            aria-label="Listbox menu with icons"
-          >
-            {(value) => (
-              <ListboxItem
-                key={value.name}
-                classNames={{
-                  title: "font-medium",
-                  base: `py-2 ${
-                    selectedLink(value.link) && "bg-primary shadow-xl"
-                  }`,
-                }}
-                variant={"bordered"}
-                startContent={
-                  <value.Icon
-                    className={
-                      iconClasses +
-                      `${selectedLink(value.link) ? "" : " text-default-500"}`
-                    }
-                  />
-                }
-              >
-                {value.name}
-              </ListboxItem>
-            )}
-          </Listbox>
-          <Divider className="my-4" />
-          <div className="bg-default-100 text-center rounded-lg p-6 flex gap-1 flex-col items-center">
-            <AddButton content="" />
-            <div>
-              <h1 className="font-bold">Add new Project</h1>
-              <h1 className="text-xs font-medium">
-                or use <span className="text-primary">invite link</span>
-              </h1>
+    <>
+      <div
+        className={`sticky ${
+          open ? " w-[280px]" : "w-0 -translate-x-72"
+        } duration-250  h-screen flex flex-col group border border-divider  top-0 left-0 border-r py-6 `}
+      >
+        <div className="flex sticky flex-col px-6 pb-[2px]  gap-5">
+          <div className="flex gap-2 items-center justify-between">
+            <div className="flex gap-2 items-center">
+              <Image
+                className="pl-1"
+                alt="logo"
+                src={logo}
+                height={30}
+                width={30}
+              />
+              <h1 className="font-bold ">Weka</h1>
             </div>
+            <Button
+              onClick={() => setOpen(false)}
+              isIconOnly
+              className="hidden  text-default-500 group-hover:flex"
+              variant="light"
+              size="sm"
+            >
+              <HiOutlineChevronDoubleRight className="rotate-180" size={15} />
+            </Button>
+            <div className="w-8 h-8 group-hover:hidden"> </div>
+          </div>
+          <div className="flex flex-col gap-4">
+            <DropdownClient>
+              <User
+                as="button"
+                avatarProps={{
+                  isBordered: true,
+                  src: "https://i.pravatar.cc/150?u=a042581f4e29026024d",
+                  size: "sm",
+                }}
+                className="transition-transform pl-1 justify-start"
+                description="@tonyreichert"
+                name="Tony Reichert"
+              />
+            </DropdownClient>
+            <SearchInput />
           </div>
         </div>
+        <ScrollShadow size={100} className="px-6 py-4  h-full">
+          <div>
+            <Listbox variant="flat" aria-label="Listbox menu with sections">
+              <ListboxSection title="OverView">
+                {mainNav.map((item) => (
+                  <ListboxItem
+                    key={item.name}
+                    classNames={{
+                      title: "font-medium",
+                    }}
+                    className="flex-1 text-small truncate py-2  text-default-500 group-data-[selected=true]:text-foreground"
+                    startContent={
+                      <item.Icon size={26} className={iconClasses} />
+                    }
+                  >
+                    {item.name}
+                  </ListboxItem>
+                ))}
+              </ListboxSection>
+
+              <ListboxSection title="Projects">
+                <ListboxItem className="text-default-500" key="copy">
+                  Copy link
+                </ListboxItem>
+              </ListboxSection>
+
+              <ListboxSection title="Tasks">
+                <ListboxItem
+                  key="new"
+                  className="flex-1 text-small truncate font-medium text-default-500 group-data-[selected=true]:text-foreground"
+                  // startContent={<item.Icon size={25} className={iconClasses} />}
+                >
+                  task
+                </ListboxItem>
+              </ListboxSection>
+            </Listbox>
+          </div>
+        </ScrollShadow>
+        <ThemeSwitch />
       </div>
-      <Switch
-        defaultSelected
-        size="md"
-        color="primary"
-        thumbIcon={({ isSelected, className }) =>
-          isSelected ? (
-            <FiSun className={className} />
-          ) : (
-            <FaMoon className={className} />
-          )
-        }
+      <div
+        className={`sticky ${
+          open ? "hidden" : "flex"
+        } top-0 left-0  h-screen  flex-col p-1 `}
       >
-        Dark mode
-      </Switch>
-    </div>
+        <Button
+          onClick={() => setOpen(true)}
+          isIconOnly
+          variant="light"
+          size="sm"
+        >
+          <HiOutlineChevronDoubleRight size={15} />
+        </Button>
+      </div>
+    </>
   );
 }

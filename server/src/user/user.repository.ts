@@ -3,10 +3,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { ClientSession, Model, Types } from 'mongoose'
+import { Model } from 'mongoose'
 import { User } from './schemas/user.schema'
 import { InjectModel } from '@nestjs/mongoose'
-import { Notification } from 'src/notification/schemas/notification.schema'
 
 @Injectable()
 export class UserRepository {

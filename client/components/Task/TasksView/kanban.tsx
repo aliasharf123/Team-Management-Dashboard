@@ -21,13 +21,13 @@ export default function Kanban() {
   return (
     <motion.div
       ref={carousel}
-      className="overflow-x-scroll  element bg-[#F9F9FB] pt-2"
+      className="overflow-x-scroll  element bg-default-100 pt-2"
       whileTap={{ cursor: "grabbing" }}
     >
       <motion.div
         drag="x"
         dragConstraints={{ right: 0, left: -width }}
-        className="flex ml-6 gap-6 mt-4 w-4 "
+        className="flex ml-6 gap-6 mt-4 w-4"
       >
         {items.map((index) => (
           <TaskCardContainer key={index}>

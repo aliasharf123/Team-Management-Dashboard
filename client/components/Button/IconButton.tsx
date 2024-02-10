@@ -25,7 +25,7 @@ export default function IconButton({
         size="sm"
         radius="full"
       >
-        <Icon className="text-default-400" size={size} />
+        <Icon className="text-default-100 " size={size} />
       </Button>
     </Tooltip>
   );

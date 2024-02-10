@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import "@mantine/core/styles.css";
 import { Providers } from "@/components/nextuiProveder";
 import { MantineProvider } from "@mantine/core";
+import { cn } from "@nextui-org/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body
+        className={cn(
+          inter.className,
+          " dark:text-white bg-background bg-radial"
+        )}
+      >
         <Providers>
           <MantineProvider>{children}</MantineProvider>
         </Providers>
