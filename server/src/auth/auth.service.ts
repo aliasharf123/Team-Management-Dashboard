@@ -15,7 +15,7 @@ export class AuthService {
     private config: ConfigService
   ) {}
 
-  async signUp(authDto: AuthDto) {
+  async localSignUp(authDto: AuthDto) {
     try {
       // hash a password
       const hash = await argon.hash(authDto.password)
@@ -39,6 +39,23 @@ export class AuthService {
     }
   }
 
+  async googleSignUp(authDto: any) {
+    try {
+      // detecte if email is used before
+      const userDetected = await this.FindUser(authDto.email)
+      if (userDetected)
+        return this.signToken(userDetected._id.toString(), userDetected.email)
+
+      // create a new user in database
+      const createUser = new this.userModel(authDto)
+
+      // add a user to database
+      createUser.save()
+      return this.signToken(createUser._id.toString(), createUser.email)
+    } catch (e) {
+      throw e
+    }
+  }
   async signIn(authDto: AuthDto) {
     try {
       const user = (await this.FindUser(authDto.email)) as

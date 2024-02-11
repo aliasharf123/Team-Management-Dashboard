@@ -13,6 +13,15 @@ export class User extends Document {
   password: string
 
   @Prop({ required: false })
-  imageUrl: string | undefined
+  name: string
+
+  @Prop({ required: false })
+  picture: string | undefined
+
+  @Prop({ required: false })
+  provider: string
+
+  @Prop({ required: false })
+  providerId: number
 }
 export const UserSchema = SchemaFactory.createForClass(User)

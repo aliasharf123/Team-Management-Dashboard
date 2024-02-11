@@ -3,8 +3,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import google from "@/public/google.png";
 import { setCookies } from "@/lib/actions/AuthCookies";
-import Link from "next/link";
-import { Button, Checkbox, Divider, Input, button } from "@nextui-org/react";
+import { Button, Checkbox, Divider, Input } from "@nextui-org/react";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { RiEyeFill } from "react-icons/ri";
@@ -12,6 +11,7 @@ import { RiEyeCloseFill } from "react-icons/ri";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
+import Link from "next/link";
 
 const schema = yup
   .object({
@@ -72,48 +72,8 @@ export default function Form({ isSignIn }: { isSignIn?: boolean }) {
     setIsVisible(!isVisible);
   };
 
-  // sign in with google provider
-  const signInWithGoogle = () => {};
-
-  function validatePassword(password: string): boolean {
-    if (
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&*()_+!]).{8,}$/.test(
-        password
-      )
-    ) {
-      const invalidRules: string[] = [];
-      if (password.length < 8) {
-        invalidRules.push("Password should be at least 8 characters long.");
-      }
-      if (!/[a-z]/.test(password)) {
-        invalidRules.push(
-          "Password should contain at least one lowercase letter."
-        );
-      }
-      if (!/[A-Z]/.test(password)) {
-        invalidRules.push(
-          "Password should contain at least one uppercase letter."
-        );
-      }
-      if (!/\d/.test(password)) {
-        invalidRules.push("Password should contain at least one digit.");
-      }
-      if (!/[@#$%^&*()_+!]/.test(password)) {
-        invalidRules.push(
-          "Password should contain at least one special character (e.g., @#$%^&*()_+!)."
-        );
-      }
-      setError(`Password is not valid. ${invalidRules.join(" ")}`);
-      return false;
-    }
-    return true;
-  }
-
   // sign in with email and password
   const signInWithPassWord = handleSubmit(async (data) => {
-    console.log(data);
-    // make a data object using form data
-
     // start loading
     setIsLoading(true);
     // made a url according to `isSignIn` state
@@ -157,9 +117,15 @@ export default function Form({ isSignIn }: { isSignIn?: boolean }) {
         </p>
       </div>
       <div className="flex w-full flex-col gap-2">
-        <Button startContent={<FcGoogle size={23} />} variant="bordered">
-          Continue with Google
-        </Button>
+        <Link href="http://localhost:3333/auth/google">
+          <Button
+            className="w-full"
+            startContent={<FcGoogle size={23} />}
+            variant="bordered"
+          >
+            Continue with Google
+          </Button>
+        </Link>
         <Button startContent={<FaGithub size={23} />} variant="bordered">
           Continue with Github
         </Button>
