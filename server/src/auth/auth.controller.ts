@@ -37,8 +37,6 @@ export class AuthController {
     const googleToken = (await this.authService.googleSignUp(req.user))
       .access_token
 
-    console.log(googleToken)
-
     res.cookie('access_token', googleToken, { httpOnly: true })
 
     res.redirect('http://localhost:3000')
